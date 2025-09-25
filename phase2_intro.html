@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Phase 2: Initial Access</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      font-family: "Courier New", monospace;
+      color: #ff0033;
+      overflow-y: auto;
+      padding: 40px;
+    }
+
+    #title {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      color: #ff0033;
+      text-shadow: 0 0 10px #ff0033, 0 0 20px #ff1a1a, 0 0 40px #ff4d4d;
+    }
+
+    #speech {
+      width: 80%;
+      max-width: 900px;
+      font-size: 1.2em;
+      line-height: 1.6em;
+      text-align: left;
+      margin-top: 40px;
+      white-space: pre-wrap;
+    }
+
+    #startBtn, #continueBtn {
+      margin-top: 20px;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      color: #ff0033;
+      border: 2px solid #ff0033;
+      background: none;
+      cursor: pointer;
+      text-shadow: 0 0 10px #ff0033;
+    }
+    #startBtn:hover, #continueBtn:hover {
+      background: #ff0033;
+      color: #000;
+    }
+    #continueBtn { display: none; }
+
+    .highlight { color:#ff1a1a; text-shadow:0 0 10px #ff0000,0 0 20px #ff3333; }
+    .scramble { color: #ff0033; }
+  </style>
+</head>
+<body>
+  <div id="title">Phase 2: Initial Access</div>
+  <button id="startBtn">Continue</button>
+  <div id="speech"></div>
+  <button id="continueBtn">Continue to Phase 2</button>
+
+  <audio id="cipherAudio" src="phase2_intro.mp3" preload="auto"></audio>
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const speechBox = document.getElementById("speech");
+    const continueBtn = document.getElementById("continueBtn");
+    const audio = document.getElementById("cipherAudio");
+
+    const text = `
+Listen closely, Operative. Recon paid off — we’ve got a lead.
+The hospital’s defenses are solid, but people? People are soft targets.
+
+We dug through open sources, scraps of social media, and digital footprints.
+What did we uncover? The CISO — Alex Carter.
+Busy. Distracted. And most importantly... predictable.
+
+Our next move: craft a message that feels real, tempting, impossible to ignore.
+A carefully worded email. A subject line that hooks. A link that looks safe.
+Alex will believe he’s opening something harmless — maybe even familiar.
+
+And when he does? That single click is the crack in the fortress wall.
+Credentials spill. Access expands. Our payload quietly installs on his laptop.
+
+Remember this truth: technology fails less often than human judgment.
+The mightiest firewall crumbles if curiosity opens the wrong attachment.
+
+Stay sharp. This is where the game stops being theoretical.
+This is where the breach begins.
+
+>> Await my signal... and Phase 2 will unfold.`
+
+    function scrambleWord(word) {
+      const chars = "!@#$%^&*()_+=-<>?";
+      return word.split("").map(() => chars[Math.floor(Math.random()*chars.length)]).join("");
+    }
+
+    function typeText(words, interval, index=0) {
+      if (index >= words.length) return;
+
+      let word = words[index];
+      let span = document.createElement("span");
+
+      const rand = Math.random();
+      if (rand < 0.15) {
+        span.innerHTML = " ".repeat(word.length) + " ";
+      } else if (rand < 0.35) {
+        span.innerHTML = `<span class="scramble">${scrambleWord(word)}</span> `;
+      } else if (rand < 0.55) {
+        span.innerHTML = `<span class="highlight">${word}</span> `;
+      } else {
+        span.innerHTML = word + " ";
+      }
+
+      speechBox.appendChild(span);
+      setTimeout(() => typeText(words, interval, index+1), interval);
+    }
+
+    startBtn.addEventListener("click", () => {
+      startBtn.style.display = "none";
+
+      // Play audio immediately (allowed because inside click)
+      audio.play().catch(err => console.log("Playback blocked:", err));
+
+      const words = text.split(/\s+/);
+
+      function startTyping() {
+        const duration = audio.duration > 0 ? audio.duration : 60; // fallback 60s
+        const wordInterval = (duration * 1000) / words.length;
+        typeText(words, wordInterval);
+      }
+
+      if (audio.readyState >= 1) {
+        startTyping();
+      } else {
+        audio.onloadedmetadata = startTyping;
+      }
+
+      audio.addEventListener("ended", () => {
+        continueBtn.style.display = "block";
+      });
+    });
+
+    continueBtn.addEventListener("click", () => {
+      window.location.href = "phase3_intro.html";
+    });
+  </script>
+</body>
+</html>

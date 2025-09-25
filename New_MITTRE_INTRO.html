@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dark Transmission</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      font-family: "Courier New", monospace;
+      color: #00ff88;
+      overflow: hidden;
+      transition: opacity 1.5s ease; /* 🔥 fade effect */
+    }
+
+    /* Sandy / Grainy Screen Overlay */
+    .sandy {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+      opacity: 0.08;
+      mix-blend-mode: screen;
+      z-index: 30;
+      pointer-events: none;
+      animation: grainPulse 2s infinite;
+    }
+    .sandy::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url("https://i.imgur.com/v0JQEqB.png");
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    @keyframes grainPulse {
+      0%, 100% { opacity: 0.08; }
+      50% { opacity: 0.15; }
+    }
+
+    /* Intro overlay */
+    #intro {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    #playBtn {
+      font-size: 2rem;
+      color: red;
+      cursor: pointer;
+      text-shadow: 0 0 10px red, 0 0 20px crimson, 0 0 40px darkred;
+      animation: flickerRed 1s infinite;
+    }
+    @keyframes flickerRed {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.4; }
+    }
+
+    /* Glitchy heading */
+    .glitch {
+      font-size: 2rem;
+      text-align: center;
+      margin: 10px 0;
+      text-shadow: 2px 0 red, -2px 0 #0ff;
+      animation: glitch 1s infinite;
+      opacity: 0;
+    }
+
+    /* Terminals */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 10px;
+      height: calc(100vh - 60px);
+      padding: 10px;
+      opacity: 0;
+    }
+    .terminal {
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #00ff88;
+      padding: 10px;
+      overflow-y: hidden;
+      font-size: 0.8rem;
+      line-height: 1.2rem;
+      position: relative;
+    }
+    .type {
+      white-space: pre;
+      height: 100%;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    /* Chaos effects */
+    .flashWhite { background: white !important; color: black !important; }
+    .errorScreen {
+      background: black !important;
+      color: red !important;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Finale takeover words */
+    .finaleWord {
+      font-size: 3rem !important;
+      font-weight: bold;
+      color: red !important;
+      text-shadow: 0 0 10px red, 0 0 20px crimson, 0 0 40px darkred;
+      animation: pulse 1s infinite;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 100% !important;
+      width: 100% !important;
+      text-align: center !important;
+    }
+    @keyframes pulse {
+      0%   { transform: scale(1); opacity: 1; }
+      50%  { transform: scale(1.2); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Blackout + Continue */
+    #blackout {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: black;
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    #continueBtn {
+      font-size: 2rem;
+      color: red;
+      padding: 20px 40px;
+      border: 2px solid red;
+      cursor: pointer;
+      text-shadow: 0 0 10px red, 0 0 20px crimson;
+      animation: pulse 1.5s infinite;
+    }
+
+    .warning { color: red; }
+    .neutral { color: #ccc; }
+    .success { color: #00ff88; }
+
+    .static {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+      opacity: 0.1;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    /* "HACKED" */
+    #hackedFlash {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 4rem;
+      color: red;
+      text-shadow: 0 0 20px red, 0 0 40px crimson;
+      opacity: 0;
+      z-index: 200;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Intro -->
+  <div id="intro"><div id="playBtn">PLAY THE MESSAGE</div></div>
+
+  <!-- Hacker Screen -->
+  <div id="screenWrapper">
+    <div class="glitch" id="header">TRANSMISSION IN PROGRESS...</div>
+    <div class="grid" id="terminalGrid">
+      <div class="terminal"><div class="type" id="text1"></div></div>
+      <div class="terminal"><div class="type" id="text2"></div></div>
+      <div class="terminal"><div class="type" id="text3"></div></div>
+      <div class="terminal"><div class="type" id="text4"></div></div>
+    </div>
+  </div>
+
+  <div class="static"></div>
+  <div class="sandy"></div>
+  <div id="hackedFlash">HACKED</div>
+
+  <!-- Blackout + Continue -->
+  <div id="blackout">
+    <div id="continueBtn">CONTINUE</div>
+  </div>
+
+  <!-- Audio -->
+  <audio id="bgAudio" src="voiceover.mp3"></audio>
+  <audio id="errorSound" src="https://www.soundjay.com/button/sounds/beep-07.mp3"></audio>
+
+  <script>
+    const intro = document.getElementById("intro");
+    const playBtn = document.getElementById("playBtn");
+    const audio = document.getElementById("bgAudio");
+    const errorSound = document.getElementById("errorSound");
+    const header = document.getElementById("header");
+    const hackedFlash = document.getElementById("hackedFlash");
+    const screenWrapper = document.getElementById("screenWrapper");
+    const terminals = document.querySelectorAll(".terminal");
+    const blackout = document.getElementById("blackout");
+
+    // Force fullscreen when "Play the Message" is clicked
+document.getElementById("playBtn").addEventListener("click", () => {
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen();
+  } else if (document.documentElement.webkitRequestFullscreen) {
+    document.documentElement.webkitRequestFullscreen(); // Safari
+  } else if (document.documentElement.msRequestFullscreen) {
+    document.documentElement.msRequestFullscreen(); // IE11
+  }
+});
+
+
+    // Hacker phrases
+    const hackerLines = [
+      ">> Connecting to darknet node...",
+      ">> Encrypting payload...",
+      ">> Deploying ransomware package...",
+      ">> Parsing intercepted traffic...",
+      ">> Uploading stolen credentials...",
+      ">> Obfuscating tracks...",
+      ">> Listening on port 666...",
+      ">> Exit node changed...",
+      "[WARNING] Possible honeypot!",
+      "[ALERT] Countermeasure detected!",
+      "[SYSTEM BREACH CONFIRMED]",
+      ">> Decryption in progress...",
+      ">> Access Granted ✅",
+      ">> Spawning reverse shell...",
+      ">> Escalating privileges...",
+      "[ALERT] Intrusion detected!"
+    ];
+
+    function fillWidth(text, width = 80) {
+      let chars = "01#%@$X";
+      while (text.length < width) {
+        text += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return text;
+    }
+
+    function randomLine() {
+      let line = document.createElement("div");
+      let base = hackerLines[Math.floor(Math.random() * hackerLines.length)];
+      let full = fillWidth(base);
+      if (base.includes("WARNING") || base.includes("ALERT") || base.includes("BREACH")) {
+        line.className = "warning";
+      } else if (base.includes("...")) {
+        line.className = "neutral";
+      } else {
+        line.className = "success";
+      }
+      line.textContent = full;
+      return line;
+    }
+
+    function startTerminals() {
+      document.querySelectorAll(".type").forEach(term => {
+        setInterval(() => {
+          if (!term.classList.contains("finaleWord") && !term.closest(".terminal").classList.contains("errorScreen")) {
+            let line = randomLine();
+            term.appendChild(line);
+            term.scrollTop = term.scrollHeight;
+          }
+        }, 120 + Math.random() * 120);
+      });
+    }
+
+    function startChaoticTakeover() {
+      setInterval(() => {
+        const x = (Math.random() - 0.5) * 15;
+        const y = (Math.random() - 0.5) * 15;
+        const scale = 1 + (Math.random() - 0.5) * 0.1;
+        screenWrapper.style.transform =
+          `rotate(${x}deg) skew(${y}deg) scale(${scale})`;
+        if (Math.random() > 0.7) {
+          screenWrapper.style.filter = "invert(1) contrast(200%)";
+          setTimeout(() => { screenWrapper.style.filter = "none"; }, 200);
+        }
+        setTimeout(() => {
+          screenWrapper.style.transform = "none";
+        }, 300);
+      }, 4000 + Math.random() * 3000);
+    }
+
+    function startHackedFlash() {
+      setInterval(() => {
+        hackedFlash.style.opacity = 1;
+        setTimeout(() => { hackedFlash.style.opacity = 0; }, 2000);
+      }, 10000 + Math.random() * 10000);
+    }
+
+    function startTerminalChaos() {
+      terminals.forEach(term => {
+        setInterval(() => {
+          const rand = Math.random();
+          if (rand < 0.1) {
+            term.classList.add("flashWhite");
+            setTimeout(() => term.classList.remove("flashWhite"), 300);
+          } else if (rand < 0.15) {
+            const typeDiv = term.querySelector(".type");
+            const backup = typeDiv.innerHTML;
+            term.classList.add("errorScreen");
+            typeDiv.innerHTML = "ERROR";
+            errorSound.play();
+            setTimeout(() => {
+              term.classList.remove("errorScreen");
+              typeDiv.innerHTML = backup;
+            }, 2000);
+          }
+        }, 3000 + Math.random() * 3000);
+      });
+    }
+
+    // Sync MITRE keywords + finale
+    let finaleShown = false;
+    audio.addEventListener("timeupdate", () => {
+      let t = audio.currentTime;
+
+      if (t > 12 && t < 14) showKeyword("RECONNAISSANCE");
+      if (t > 22 && t < 24) showKeyword("INITIAL ACCESS");
+      if (t > 27 && t < 29) showKeyword("EXECUTION");
+      if (t > 32 && t < 34) showKeyword("PERSISTENCE");
+      if (t > 38 && t < 40) showKeyword("PRIVILEGE ESCALATION");
+      if (t > 45 && t < 47) showKeyword("DEFENSIVE EVASION");
+      if (t > 50 && t < 52) showKeyword("CREDENTIAL ACCESS");
+      if (t > 57 && t < 59) showKeyword("DISCOVERY");
+      if (t > 65 && t < 67) showKeyword("LATERAL MOVEMENT");
+      if (t > 70 && t < 72) showKeyword("EXFILTRATION");
+      if (t > 76 && t < 78) showKeyword("IMPACT");
+
+      // Finale at 1:20–1:22
+      if (t > 80 && t < 82 && !finaleShown) {
+        showFinaleWords();
+        finaleShown = true;
+      }
+    });
+
+    function showFinaleWords() {
+      const words = ["WE", "CALL", "IT", "BUSINESS"];
+      terminals.forEach((term, i) => {
+        const typeDiv = term.querySelector(".type");
+        const backup = typeDiv.innerHTML;
+        typeDiv.classList.add("finaleWord");
+        typeDiv.innerHTML = words[i];
+        setTimeout(() => {
+          // After 2s, blackout entire screen
+          blackout.style.display = "flex";
+        }, 2000);
+        setTimeout(() => {
+          typeDiv.classList.remove("finaleWord");
+          typeDiv.innerHTML = backup;
+        }, 3000);
+      });
+    }
+
+    function showKeyword(word) {
+      terminals.forEach(term => {
+        const typeDiv = term.querySelector(".type");
+        const backup = typeDiv.innerHTML;
+        typeDiv.classList.add("errorScreen");
+        typeDiv.innerHTML = word;
+        setTimeout(() => {
+          typeDiv.classList.remove("errorScreen");
+          typeDiv.innerHTML = backup;
+        }, 2000);
+      });
+    }
+
+    playBtn.onclick = () => {
+      intro.style.display = "none";
+      header.style.opacity = 1;
+      document.getElementById("terminalGrid").style.opacity = 1;
+      audio.play();
+      startTerminals();
+      startChaoticTakeover();
+      startHackedFlash();
+      startTerminalChaos();
+    };
+
+    audio.addEventListener("ended", () => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+
+    // Smooth transition to student_intructions.html
+    document.getElementById("continueBtn").addEventListener("click", () => {
+      document.body.style.opacity = "0"; // fade out
+      setTimeout(() => {
+        window.location.href = "student_intructions.html";
+      }, 1500); // match CSS transition
+    });
+  </script>
+</body>
+</html>

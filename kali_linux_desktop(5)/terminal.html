@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kali Terminal</title>
+  <style>
+    body {
+      margin: 0;
+      background: transparent;
+      font-family: monospace;
+    }
+
+    #terminal-window {
+      position: absolute;
+      top: 80px;
+      left: 120px;
+      width: 820px;
+      height: 480px;
+      background: #2b2b2b;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .top-bar {
+      background: #1e1e1e;
+      color: #ccc;
+      padding: 5px 10px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+    }
+    .buttons {
+      display: flex;
+      gap: 6px;
+      margin-right: 15px;
+    }
+    .btn {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .close { background: #ff5f56; }
+    .minimize { background: #ffbd2e; }
+    .maximize { background: #27c93f; }
+
+    .menu {
+      display: flex;
+      gap: 15px;
+    }
+    .menu span {
+      cursor: pointer;
+      color: #ccc;
+    }
+    .menu span:hover { color: white; }
+
+    #terminal {
+      flex: 1;
+      padding: 10px;
+      color: #eee;
+      font-size: 15px;
+      overflow-y: auto;
+      background: #2b2b2b;
+    }
+
+    .input-line { display: flex; }
+    .prompt {
+      color: #d00;
+      margin-right: 5px;
+    }
+    .path {
+      color: #3af;
+    }
+    .cmd {
+      background: none;
+      border: none;
+      color: #fff;
+      outline: none;
+      font-family: monospace;
+      font-size: 15px;
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal-window">
+    <div class="top-bar">
+      <div class="buttons">
+        <span class="btn close" onclick="window.parent.postMessage('closeTerminal','*')"></span>
+        <span class="btn minimize" onclick="window.parent.postMessage('minTerminal','*')"></span>
+        <span class="btn maximize" onclick="alert('Maximized (demo only)')"></span>
+      </div>
+      <div class="menu">
+        <span onclick="menuFile()">File</span>
+        <span onclick="menuActions()">Actions</span>
+        <span onclick="menuEdit()">Edit</span>
+        <span onclick="menuView()">View</span>
+        <span onclick="menuHelp()">Help</span>
+      </div>
+    </div>
+
+    <div id="terminal"></div>
+  </div>
+
+  <script>
+    const terminal = document.getElementById("terminal");
+    let fontSize = 15;
+
+    function getResponse(cmd) {
+      switch (cmd) {
+        case "whois":
+          return "Usage: whois <domain>";
+
+        case "whois starlight-hospital.com":
+          return `Domain Name: STARLIGHT-HOSPITAL.COM
+Registry Domain ID: 184511234_DOMAIN_COM-VRSN
+Registrar WHOIS Server: whois.securedomains.com
+Registrar URL: http://www.securedomains.com
+Updated Date: 2024-03-15T04:12:31Z
+Creation Date: 2012-04-14T12:23:01Z
+Registrar Registration Expiration Date: 2025-04-14T12:23:01Z
+Registrar: SecureDomains LLC
+Registrar IANA ID: 9999
+Registrar Abuse Contact Email: abuse@securedomains.com
+Registrar Abuse Contact Phone: +1.5551234567
+Domain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited
+Name Server: NS1.SECUREDNS.COM
+Name Server: NS2.SECUREDNS.COM
+DNSSEC: unsigned
+>>> Last update of WHOIS database: 2025-09-23T17:32:19Z <<<`;
+
+        case "nslookup":
+          return "Usage: nslookup <domain>";
+
+        case "nslookup starlight-hospital.com":
+          return `Server:     192.168.1.1
+Address:    192.168.1.1#53
+
+Non-authoritative answer:
+Name:   starlight-hospital.com
+Address: 104.22.14.251
+Name:   starlight-hospital.com
+Address: 104.22.15.251`;
+
+        case "ls":
+          return "Desktop  Documents  Downloads  recon_notes.txt";
+
+        case "cat recon_notes.txt":
+          return "Recon Notes:\n- Possible staff emails...\n- VPN default password...\n- Targeted Domain : starlight-hospital.com";
+
+        case "help":
+          return "Available commands:\n  whois\n  nslookup\n  dig\n  nmap\n  ls\n  clear\n  help";
+
+        default:
+          return null;
+      }
+    }
+
+    function newLine() {
+      const line = document.createElement("div");
+      line.className = "input-line";
+      const prompt = document.createElement("span");
+      prompt.className = "prompt";
+      prompt.innerHTML = "kali@kali:<span class='path'>~$</span>";
+      const input = document.createElement("input");
+      input.type = "text";
+      input.className = "cmd";
+      line.appendChild(prompt);
+      line.appendChild(input);
+      terminal.appendChild(line);
+      input.focus();
+      input.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+          const cmd = input.value.trim();
+          runCommand(cmd, line);
+        }
+      });
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function runCommand(cmd, line) {
+      line.querySelector(".cmd").remove();
+      const typed = document.createElement("span");
+      typed.textContent = " " + cmd;
+      typed.style.color = "#fff";
+      line.appendChild(typed);
+      const output = document.createElement("div");
+      output.style.whiteSpace = "pre-wrap";
+      if (cmd === "clear") {
+        terminal.innerHTML = "";
+      } else {
+        const resp = getResponse(cmd);
+        output.textContent = resp ? resp : `bash: ${cmd}: command not found`;
+        terminal.appendChild(output);
+      }
+      newLine();
+    }
+
+    // Menu functions
+    function menuFile() { alert("File menu"); }
+    function menuActions() { terminal.innerHTML = ""; newLine(); }
+    function menuEdit() { alert("Edit menu"); }
+    function menuView() { fontSize += 1; terminal.style.fontSize = fontSize + "px"; }
+    function menuHelp() { alert("Help info"); }
+
+    // Start terminal
+    newLine();
+  </script>
+</body>
+</html>

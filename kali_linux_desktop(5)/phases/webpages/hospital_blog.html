@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hospital Insights Blog</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Georgia, serif;
+      background: #fafafa;
+      color: #222;
+    }
+
+    /* Nav bar */
+    header {
+      background: white;
+      border-bottom: 1px solid #ddd;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header .logo {
+      font-weight: bold;
+      font-size: 22px;
+      font-family: 'Times New Roman', serif;
+    }
+    header nav a {
+      margin-left: 20px;
+      color: #444;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    header nav a:hover { color: black; }
+
+    /* Blog container */
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .post {
+      background: white;
+      padding: 25px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .post h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .meta {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 15px;
+    }
+    .post p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .read-more {
+      display: inline-block;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .read-more:hover { text-decoration: underline; }
+
+    footer {
+      background: white;
+      border-top: 1px solid #ddd;
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: #666;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Hospital Insights</div>
+    <nav>
+      <a href="#">Our Mission</a>
+      <a href="#">Write</a>
+      <a href="#">Sign In</a>
+    </nav>
+  </header>
+
+  <div class="container">
+
+    <!-- Mercy General -->
+    <div class="post">
+      <h2>Serving the Community Beyond Hospital Walls</h2>
+      <div class="meta">By Mercy General • Published Aug 2025</div>
+      <p>
+        Mercy General recently launched a free mobile health clinic program that has
+        reached over 12,000 residents in underserved neighborhoods. Our goal is simple:
+        to ensure access to essential healthcare regardless of income, status, or
+        geography.
+      </p>
+      <p>
+        The mobile units provide primary care visits, vaccinations, and health screenings,
+        and they’ve been especially effective in detecting early-stage illnesses in
+        communities with limited resources. Feedback from local residents has been
+        overwhelmingly positive, and our staff has found this initiative deeply rewarding.
+      </p>
+      <p>
+        Mercy General believes that healthcare is a human right, and this program is only
+        the beginning. Plans are already underway to double the number of units operating
+        by the end of next year.
+      </p>
+      <a href="#" class="read-more">Read more →</a>
+    </div>
+
+    <!-- Northwell Regional -->
+    <div class="post">
+      <h2>Leading the Way in Green Energy Hospitals</h2>
+      <div class="meta">By Northwell Regional • Published Jul 2025</div>
+      <p>
+        Northwell Regional became the first hospital in the state to transition to
+        100% renewable energy. This shift has reduced annual carbon emissions by 45%,
+        while simultaneously cutting operational costs.
+      </p>
+      <p>
+        The hospital installed solar panels, invested in wind energy partnerships, and
+        even implemented a geothermal system to regulate temperature in critical areas.
+        This approach ensures the facility can continue running efficiently even during
+        regional power shortages.
+      </p>
+      <p>
+        Beyond sustainability, Northwell Regional has shared its playbook with other
+        healthcare systems, believing that collaboration is the key to large-scale
+        environmental impact.
+      </p>
+      <a href="#" class="read-more">Read more →</a>
+    </div>
+
+    <!-- Starlight Hospital -->
+    <div class="post">
+      <h2>AI Diagnostics Cut ER Wait Times by 30%</h2>
+      <div class="meta">By Starlight Hospital • Published Sep 2025 • Contact: <a href="mailto:alex.carter@gmail.com">alex.carter@gmail.com</a></div>
+      <p>
+        At Starlight Hospital, innovation drives patient care. Our newly developed
+        AI-driven diagnostic system has reduced emergency room wait times by 30%,
+        ensuring patients are triaged and treated faster than ever.
+      </p>
+      <p>
+        This system leverages machine learning algorithms trained on thousands of
+        patient records to assist doctors in identifying critical cases quickly.
+        The technology doesn’t replace human judgment, but rather enhances it,
+        allowing physicians to focus on decision-making instead of data entry.
+      </p>
+      <p>
+        This milestone is just one of many steps Starlight is taking in redefining
+        modern healthcare. We are also conducting ongoing trials for AI-assisted
+        surgery support systems, which we hope to publish findings on next year.
+      </p>
+      <a href="#" class="read-more">Read more →</a>
+    </div>
+
+    <!-- Unity Health -->
+    <div class="post">
+      <h2>Recognized Nationally for Nursing Excellence</h2>
+      <div class="meta">By Unity Health • Published Jun 2025</div>
+      <p>
+        Our nursing team at Unity Health has been awarded the prestigious Magnet
+        Recognition for Nursing Excellence, highlighting our commitment to
+        compassionate, patient-centered care and professional growth.
+      </p>
+      <p>
+        Nurses are the backbone of healthcare, and at Unity, we’ve invested heavily
+        in continuing education, wellness programs, and leadership development.
+        The result? A happier workforce, better patient outcomes, and national
+        recognition of our efforts.
+      </p>
+      <p>
+        This recognition inspires us to continue raising the standard of nursing
+        care. We hope to serve as a model for other institutions nationwide.
+      </p>
+      <a href="#" class="read-more">Read more →</a>
+    </div>
+
+    <!-- Riverside Medical -->
+    <div class="post">
+      <h2>Expanding Rural Access to Specialty Care</h2>
+      <div class="meta">By Riverside Medical • Published May 2025</div>
+      <p>
+        Riverside Medical has launched a telemedicine program connecting rural patients
+        with top specialists in cardiology, oncology, and neurology. For many, this is
+        the first time they’ve been able to consult with experts without traveling
+        hundreds of miles.
+      </p>
+      <p>
+        In just six months, the program has completed over 8,000 virtual visits,
+        with overwhelmingly positive feedback from patients and families.
+      </p>
+      <p>
+        Our goal is to eliminate healthcare deserts and bring world-class expertise to
+        every corner of our state.
+      </p>
+      <a href="#" class="read-more">Read more →</a>
+    </div>
+
+    <!-- Horizon Care -->
+    <div class="post">
+      <h2>Breakthrough in Cancer Immunotherapy</h2>
+      <div class="meta">By Horizon Care • Published Apr 2025</div>
+      <p>
+        Researchers at Horizon Care have announced a major breakthrough in cancer
+        immunotherapy, showing promising results in early clinical trials. The new
+        treatment significantly boosts survival rates for patients with advanced
+        melanoma.
+      </p>
+      <p>
+        This research, funded through both federal grants and philanthropic
+        contributions, has been hailed as a game-changer in oncology circles.
+      </p>
+      <p>
+        Horizon Care’s findings will be published in leading medical journals,
+        further solidifying its place as a pioneer in cancer research.
+      </p>
+      <a href="#" class="read-more">Read more →</a>
+    </div>
+
+    <!-- Providence Memorial -->
+    <div class="post">
+      <h2>Hospital of the Year Awarded to Providence Memorial</h2>
+      <div class="meta">By Providence Memorial • Published Mar 2025</div>
+      <p>
+        Providence Memorial has been named “Hospital of the Year” by the National
+        Healthcare Review Board for its outstanding patient outcomes and innovative
+        programs in preventive care.
+      </p>
+      <p>
+        The hospital has implemented predictive analytics systems to track patient
+        readmissions and launched wellness programs that have drastically reduced
+        preventable illnesses in its community.
+      </p>
+      <p>
+        Providence Memorial attributes its success to a culture of collaboration
+        and its unwavering focus on the patient experience.
+      </p>
+      <a href="#" class="read-more">Read more →</a>
+    </div>
+
+  </div>
+
+  <footer>
+    © 2025 Hospital Insights · Built to share healthcare innovation stories
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Healthcare News Blog</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto', sans-serif; background: #f8f6fb; margin: 0; padding: 0; color: #333; }
+    
+    /* Header */
+    header { 
+      background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+      color: white; 
+      padding: 40px 20px; 
+      text-align: center; 
+    }
+    header h1 { margin: 0; font-size: 34px; font-weight: 700; }
+    header p { margin-top: 8px; font-size: 15px; opacity: 0.9; }
+
+    /* Navigation */
+    nav { 
+      background: #fff; 
+      padding: 12px 20px; 
+      text-align: center; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    nav a { 
+      margin: 0 15px; 
+      text-decoration: none; 
+      color: #6A1B9A; 
+      font-weight: 500; 
+      transition: color 0.3s; 
+    }
+    nav a:hover { color: #4A148C; }
+
+    /* Main Layout */
+    .main { 
+      display: flex; 
+      max-width: 1100px; 
+      margin: auto; 
+      padding: 20px; 
+      gap: 20px; 
+    }
+    .content { flex: 3; }
+    .sidebar { flex: 1; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+
+    /* Posts */
+    .post {
+      background: #fff; 
+      border-left: 6px solid #6A1B9A;
+      border-radius: 6px; 
+      margin-bottom: 20px; 
+      padding: 15px; 
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+    .post:hover { transform: translateY(-2px); }
+    .post h3 { margin: 0; color: #4A148C; }
+    .meta { font-size: 12px; color: #777; margin: 5px 0; }
+    .post p { font-size: 14px; color: #555; margin: 8px 0; }
+    .post a { font-size: 13px; color: #6A1B9A; text-decoration: none; }
+    .post a:hover { text-decoration: underline; }
+
+    /* Sidebar */
+    .sidebar h3 { color: #6A1B9A; margin-top: 0; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin-bottom: 8px; }
+    .sidebar a { text-decoration: none; color: #333; font-size: 14px; }
+    .sidebar a:hover { color: #4A148C; }
+
+    /* Footer */
+    footer { 
+      background: #4A148C; 
+      color: white; 
+      padding: 25px 20px; 
+      text-align: center; 
+      margin-top: 40px;
+    }
+    footer a { color: #ffeb3b; text-decoration: none; margin: 0 8px; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Healthcare News Blog</h1>
+    <p>Latest updates on hospitals, clinics, and healthcare in New York City</p>
+  </header>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Hospitals</a>
+    <a href="#">Trends</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <div class="main">
+    <div class="content">
+      <!-- Posts -->
+      <div class="post">
+        <h3>Starlight Hospital Expands Emergency Department</h3>
+        <div class="meta">Published: Sep 22, 2025</div>
+        <p>Starlight Hospital announced the opening of a new ER wing with 50 additional beds to serve Manhattan’s growing population.</p>
+        <a href="#">Read More</a>
+      </div>
+
+      <div class="post">
+        <h3>Queens Community Hospital Launches Pediatric Telehealth</h3>
+        <div class="meta">Published: Sep 18, 2025</div>
+        <p>Parents in Queens can now book online pediatric appointments as part of a city-wide telehealth expansion.</p>
+        <a href="#">Read More</a>
+      </div>
+
+      <div class="post">
+        <h3>BronxCare Regional Hospital Celebrates 100 Years</h3>
+        <div class="meta">Published: Sep 10, 2025</div>
+        <p>BronxCare marked its 100th anniversary with a community event honoring healthcare workers and local residents.</p>
+        <a href="#">Read More</a>
+      </div>
+
+      <div class="post">
+        <h3>AI in Healthcare: NYC Hospitals Adopt New Tools</h3>
+        <div class="meta">Published: Aug 30, 2025</div>
+        <p>Artificial intelligence is now assisting radiologists in several NYC hospitals, helping speed up diagnostic imaging.</p>
+        <a href="#">Read More</a>
+      </div>
+
+      <div class="post">
+        <h3>National Health Awareness Week Highlights Wellness</h3>
+        <div class="meta">Published: Aug 20, 2025</div>
+        <p>Hospitals across New York held events to promote preventive care, nutrition, and mental health awareness.</p>
+        <a href="#">Read More</a>
+      </div>
+
+      <div class="post">
+        <h3>Brooklyn Wellness Center Adds Maternity Services</h3>
+        <div class="meta">Published: Aug 05, 2025</div>
+        <p>The Brooklyn Wellness Center has introduced a maternity ward offering prenatal classes and neonatal intensive care.</p>
+        <a href="#">Read More</a>
+      </div>
+
+      <div class="post">
+        <h3>Citywide Heatwave: Hospitals Report Surge in ER Visits</h3>
+        <div class="meta">Published: Jul 29, 2025</div>
+        <p>NYC hospitals experienced a spike in emergency visits due to heat-related illnesses during this summer’s record temperatures.</p>
+        <a href="#">Read More</a>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h3>Categories</h3>
+      <ul>
+        <li><a href="#">Hospital Updates</a></li>
+        <li><a href="#">Technology</a></li>
+        <li><a href="#">Community</a></li>
+        <li><a href="#">Wellness</a></li>
+      </ul>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        <li><a href="#">Starlight Hospital Expands Emergency Department</a></li>
+        <li><a href="#">AI in Healthcare: NYC Hospitals Adopt New Tools</a></li>
+        <li><a href="#">Citywide Heatwave: Surge in ER Visits</a></li>
+      </ul>
+
+      <h3>Tags</h3>
+      <ul>
+        <li><a href="#">NYC</a></li>
+        <li><a href="#">Hospitals</a></li>
+        <li><a href="#">Telehealth</a></li>
+        <li><a href="#">AI</a></li>
+        <li><a href="#">Community</a></li>
+      </ul>
+    </aside>
+  </div>
+
+  <footer>
+    <p>Healthcare News Blog © 2025 · Content for informational purposes only</p>
+    <p>
+      <a href="#">Privacy Policy</a> | 
+      <a href="#">Terms</a> | 
+      <a href="#">Contact</a>
+    </p>
+  </footer>
+</body>
+</html>

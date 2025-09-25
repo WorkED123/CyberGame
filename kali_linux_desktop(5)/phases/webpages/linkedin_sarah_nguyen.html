@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>(42) Sarah Nguyen | LinkedIn</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f3f2ef; }
+    header { background: #283e4a; color: white; display: flex; align-items: center; padding: 8px 16px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+    header .logo { font-weight: bold; font-size: 20px; margin-right: 20px; }
+    header input { flex: 1; padding: 6px; border: none; border-radius: 4px; }
+    header .icons { display: flex; gap: 20px; margin-left: 20px; font-size: 18px; }
+    .container { display: flex; margin-top: 60px; padding: 20px; gap: 20px; }
+    .left, .main, .right { background: none; }
+    .left { flex: 1; } .main { flex: 2; } .right { flex: 1; }
+    .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 15px; }
+    .profile-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+    .btn { display: inline-block; padding: 6px 12px; border: 1px solid #0a66c2; background: #0a66c2; color: white; border-radius: 20px; font-size: 14px; cursor: pointer; margin-top: 8px; }
+    .post { border-top: 1px solid #ddd; padding-top: 12px; margin-top: 12px; }
+    .post strong { display: block; margin-bottom: 4px; }
+    .post-date { font-size: 12px; color: #666; margin-bottom: 8px; }
+    .reactions { display: flex; align-items: center; justify-content: space-between; font-size: 14px; margin-top: 8px; color: #555; }
+    .reaction-icons { font-size: 16px; }
+    .reaction-actions { display: flex; gap: 20px; font-size: 14px; color: #666; margin-top: 5px; border-top: 1px solid #ddd; padding-top: 6px; }
+    h4 { margin-top: 0; margin-bottom: 8px; font-size: 16px; }
+    a { color: #0a66c2; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <header>
+    <div class="logo">LinkedIn</div>
+    <input type="text" placeholder="Search">
+    <div class="icons">🏠 👥 💼 💬 🔔</div>
+  </header>
+
+  <div class="container">
+    <!-- Left Sidebar -->
+    <div class="left">
+      <div class="card">
+        <img src="sarah.jpg" alt="Sarah Nguyen" class="profile-photo">
+        <h3>Sarah Nguyen</h3>
+        <p>Head Nurse</p>
+        <p>Starlight Hospital · New York, NY</p>
+        <p>500+ connections</p>
+        <button class="btn">Connect</button>
+        <button class="btn">Message</button>
+      </div>
+      <div class="card">
+        <h4>Experience</h4>
+        <p><strong>Head Nurse</strong> — Starlight Hospital (2017–Present)</p>
+        <p>• Oversees 120+ nursing staff<br>• Ensures patient care quality<br>• Leads training in patient safety protocols</p>
+        <p><strong>Senior Nurse</strong> — Mercy General (2010–2017)</p>
+        <p>• Specialized in ICU and ER care<br>• Mentored new nurses</p>
+      </div>
+      <div class="card">
+        <h4>Education</h4>
+        <p>MS Nursing Administration — UCLA (2008–2010)</p>
+        <p>BS Nursing — UC Irvine (2004–2008)</p>
+      </div>
+    </div>
+
+    <!-- Main Feed -->
+    <div class="main">
+      <div class="card">
+        <input type="text" placeholder="Start a post" style="width:100%; padding:8px; border-radius:20px; border:1px solid #ddd;">
+      </div>
+      <div class="card">
+        <h4>Activity</h4>
+
+        <!-- 10 posts -->
+        <div class="post"><strong>Sarah Nguyen</strong><div class="post-date">3d · Starlight Hospital</div>Proud to lead the **nursing staff vaccination drive** — over 98% of our team is now fully vaccinated against seasonal flu, protecting our patients!<div class="reactions"><div class="reaction-icons">👍 👏 ❤️ · 87</div><div>18 comments · 4 shares</div></div><div class="reaction-actions"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Repost</div><div>✉️ Send</div></div></div>
+
+        <div class="post"><strong>Sarah Nguyen</strong><div class="post-date">1w · New York, NY</div>Launched a **new patient safety protocol** in our ICU. Already seeing positive results in reducing patient falls and errors.<div class="reactions"><div class="reaction-icons">👍 👏 💡 ❤️ · 74</div><div>22 comments · 5 shares</div></div><div class="reaction-actions"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Repost</div><div>✉️ Send</div></div></div>
+
+        <div class="post"><strong>Sarah Nguyen</strong><div class="post-date">2w · Starlight Hospital</div>Hosting a **nurse leadership workshop** next week. Thrilled to help train the next generation of nurse leaders.<div class="reactions"><div class="reaction-icons">👍 👏 ❤️ · 66</div><div>14 comments · 3 shares</div></div><div class="reaction-actions"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Repost</div><div>✉️ Send</div></div></div>
+
+        <div class="post"><strong>Sarah Nguyen</strong><div class="post-date">2w · Starlight Hospital</div>Welcoming **12 new nurses** to the pediatrics department. Excited to see their passion and dedication for children’s health!<div class="reactions"><div class="reaction-icons">👍 👏 ❤️ · 102</div><div>27 comments · 9 shares</div></div><div class="reaction-actions"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Repost</div><div>✉️ Send</div></div></div>
+
+        <div class="post"><strong>Sarah Nguyen</strong><div class="post-date">3w · New York, NY</div>Our ICU team successfully implemented **new electronic medication tracking**, reducing prescription errors by 30%.<div class="reactions"><div class="reaction-icons">👍 👏 💡 ❤️ · 81</div><div>19 comments · 6 shares</div></div><div class="reaction-actions"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Repost</div><div>✉️ Send</div></div></div>
+
+        <div class="post"><strong>Sarah Nguyen</strong><div class="post-date">1mo · Starlight Hospital</div>Completed a **simulation drill** for emergency response. The nursing team performed exceptionally well under pressure.<div class="reactions"><div class="reaction-icons">👍 👏 ❤️ · 73</div><div>20 comments · 3 shares</div></div><div class="reaction-actions"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Repost</div><div>✉️ Send</div></div></div>
+
+        <div class="post"><strong>Sarah Nguyen</strong><div class="post-date">1mo · New York, NY</div>Spoke at the **California Nursing Conference** about patient safety innovation in high-pressure hospital environments.<div class="reactions"><div class="reaction-icons">👍 👏 💡 ❤️ · 90</div><div>25 comments · 7 shares</div></div><div class="reaction-actions"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Repost</div><div>✉️ Send</div></div></div>
+
+        <div class="post"><strong>Sarah Nguyen</strong><div class="post-date">1mo · Starlight Hospital</div>Grateful for our **night shift nurses** who work tirelessly to ensure round-the-clock patient care.<div class="reactions"><div class="reaction-icons">👍 👏 ❤️ · 56</div><div>12 comments · 2 shares</div></div><div class="reaction-actions"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Repost</div><div>✉️ Send</div></div></div>
+
+        <div class="post"><strong>Sarah Nguyen</strong><div class="post-date">2mo · Starlight Hospital</div>Introducing a **new mentorship program** for newly graduated nurses to ease transition into clinical practice.<div class="reactions"><div class="reaction-icons">👍 👏 💡 ❤️ · 61</div><div>17 comments · 5 shares</div></div><div class="reaction-actions"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Repost</div><div>✉️ Send</div></div></div>
+
+        <div class="post"><strong>Sarah Nguyen</strong><div class="post-date">2mo · New York, NY</div>Celebrating **Nurses Week 2025** with recognition for outstanding service and patient care at Starlight Hospital.<div class="reactions"><div class="reaction-icons">👍 👏 ❤️ · 147</div><div>44 comments · 11 shares</div></div><div class="reaction-actions"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Repost</div><div>✉️ Send</div></div></div>
+
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="right">
+      <div class="card">
+        <h4>People You May Know</h4>
+        <p><a href="linkedin_alex_carter.html">Alex Carter — CISO</a></p>
+        <p><a href="linkedin_michael_thomas.html">Michael Thomas — Systems Administrator</a></p>
+        <p><a href="linkedin_rebecca_lee.html">Rebecca Lee — HR Director</a></p>
+      </div>
+      <div class="card">
+        <h4>Add to your feed</h4>
+        <p>American Nurses Association · Follow</p>
+        <p>Healthcare Leadership · Follow</p>
+        <p>Patient Safety Foundation · Follow</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NYC Health Directory</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto', sans-serif; background: #f4f4f4; margin: 0; padding: 0; color: #333; }
+    
+    /* Header */
+    header { 
+      background: linear-gradient(135deg, #00897B, #26A69A);
+      color: white; 
+      padding: 40px 20px; 
+      text-align: center; 
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    header h1 { margin: 0; font-size: 32px; font-weight: 700; }
+    header p { margin-top: 8px; font-size: 16px; opacity: 0.9; }
+
+    /* Navigation */
+    nav { 
+      background: #fff; 
+      padding: 12px 20px; 
+      text-align: center; 
+      position: sticky; 
+      top: 0; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+    nav a { 
+      margin: 0 15px; 
+      text-decoration: none; 
+      color: #00897B; 
+      font-weight: 500; 
+      transition: color 0.3s; 
+    }
+    nav a:hover { color: #00695C; }
+
+    /* Container */
+    .container { 
+      padding: 30px 20px; 
+      max-width: 1000px; 
+      margin: auto; 
+    }
+    h2 { color: #00897B; margin-bottom: 20px; }
+
+    /* Search + Filters */
+    .search-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+      justify-content: center;
+    }
+    .search-filters input, .search-filters select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .search-filters button {
+      padding: 10px 15px;
+      background: #00897B;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .search-filters button:hover { background: #00695C; }
+
+    /* Listings */
+    .listing { 
+      background: white; 
+      border-radius: 10px; 
+      padding: 20px; 
+      margin-bottom: 20px; 
+      box-shadow: 0 3px 8px rgba(0,0,0,0.05); 
+      transition: transform 0.2s; 
+    }
+    .listing:hover { transform: translateY(-3px); }
+    .listing h3 { margin-top: 0; color: #00695C; }
+    .listing p { margin: 6px 0; font-size: 14px; }
+    .listing a { 
+      display: inline-block; 
+      margin-top: 10px; 
+      padding: 8px 15px; 
+      background: #00897B; 
+      color: white; 
+      border-radius: 5px; 
+      text-decoration: none; 
+      font-size: 14px; 
+      transition: background 0.3s; 
+    }
+    .listing a:hover { background: #00695C; }
+
+    /* Stats Section */
+    .stats {
+      background: #fff;
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .stats-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+    }
+    .stat h2 {
+      color: #00897B;
+      font-size: 32px;
+      margin: 0;
+    }
+    .stat p {
+      margin: 5px 0 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* News */
+    .news {
+      background: #fefcf8;
+      padding: 50px 20px;
+    }
+    .news h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #00897B;
+    }
+    .news-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .news-card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      width: 280px;
+      padding: 15px;
+    }
+    .news-card img {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    .news-card .date {
+      font-size: 12px;
+      color: #777;
+    }
+    .news-card h3 {
+      font-size: 16px;
+      color: #333;
+    }
+
+    /* CTA */
+    .cta {
+      text-align: center;
+      padding: 30px;
+      margin: 40px 0;
+      background: #e0f2f1;
+      border-radius: 10px;
+    }
+    .cta h2 { color: #00897B; margin-bottom: 10px; }
+    .cta button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #00897B;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .cta button:hover { background: #00695C; }
+
+    /* Mega Footer */
+    .mega-footer {
+      background: #004d40;
+      color: white;
+      padding: 40px 20px;
+    }
+    .footer-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+    .footer-brand {
+      max-width: 300px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 40px;
+    }
+    .footer-links h4 {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    .footer-links a {
+      color: #ffeb3b;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .footer-links a:hover { text-decoration: underline; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+    .socials a {
+      margin: 0 8px;
+      color: #ffeb3b;
+      text-decoration: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav a { display: inline-block; margin: 10px; }
+      .container { padding: 20px 10px; }
+      .search-filters { flex-direction: column; align-items: center; }
+      .stats-container { flex-direction: column; }
+      .footer-links { flex-direction: column; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NYC Health Directory</h1>
+    <p>Your guide to healthcare providers in New York City</p>
+  </header>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Hospitals</a>
+    <a href="#">Clinics</a>
+    <a href="#">Emergency Services</a>
+  </nav>
+
+  <div class="container">
+    <h2>Featured Listings</h2>
+
+    <!-- Search + Filters -->
+    <div class="search-filters">
+      <input type="text" id="searchBar" placeholder="Search hospitals...">
+      <select id="boroughFilter">
+        <option value="all">All Boroughs</option>
+        <option value="Manhattan">Manhattan</option>
+        <option value="Brooklyn">Brooklyn</option>
+        <option value="Queens">Queens</option>
+        <option value="Bronx">Bronx</option>
+        <option value="Staten Island">Staten Island</option>
+      </select>
+      <select id="specialtyFilter">
+        <option value="all">All Specialties</option>
+        <option value="Cardiology">Cardiology</option>
+        <option value="Pediatrics">Pediatrics</option>
+        <option value="Emergency">Emergency</option>
+        <option value="General">General</option>
+      </select>
+      <button onclick="applyFilters()">Search</button>
+    </div>
+
+    <!-- Hospital Listings -->
+    <!-- (The 15 listings we built earlier go here) -->
+    <div class="listing"><h3>Starlight Hospital</h3><p>📍 123 Linden Road, New York, NY</p><p>☎️ (555) 123-4567</p><p>Description: General healthcare provider in NYC.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>City General Medical Center</h3><p>📍 789 Broadway Ave, New York, NY</p><p>☎️ (555) 987-6543</p><p>Description: Offering 24/7 emergency care and general surgery.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Northside Health</h3><p>📍 45 North Rd, Brooklyn, NY</p><p>☎️ (555) 555-5555</p><p>Description: Family practice and urgent care.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Riverside Medical Center</h3><p>📍 210 Riverside Dr, Manhattan, NY</p><p>☎️ (555) 222-3344</p><p>Description: Specialized in cardiology and stroke recovery.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Queens Community Hospital</h3><p>📍 890 Queens Blvd, Queens, NY</p><p>☎️ (555) 333-2211</p><p>Description: Serving Queens with pediatric and maternity care.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Brooklyn Wellness Center</h3><p>📍 321 Flatbush Ave, Brooklyn, NY</p><p>☎️ (555) 444-7788</p><p>Description: Full-service wellness and outpatient care.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Harlem Medical Institute</h3><p>📍 560 Lenox Ave, Harlem, NY</p><p>☎️ (555) 876-4321</p><p>Description: Known for research and primary care in underserved areas.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Eastside Specialty Hospital</h3><p>📍 112 East 74th St, Manhattan, NY</p><p>☎️ (555) 888-9999</p><p>Description: Leading orthopedic and sports medicine facility.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Midtown Medical Pavilion</h3><p>📍 400 5th Ave, Midtown, NY</p><p>☎️ (555) 246-1357</p><p>Description: Provides urgent care and surgical services.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>BronxCare Regional Hospital</h3><p>📍 175 Grand Concourse, Bronx, NY</p><p>☎️ (555) 135-2468</p><p>Description: Comprehensive ER and trauma center.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Liberty Health Center</h3><p>📍 700 Liberty St, Staten Island, NY</p><p>☎️ (555) 202-3030</p><p>Description: Family medicine and long-term care services.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Metropolitan Care Hospital</h3><p>📍 230 Park Ave, Manhattan, NY</p><p>☎️ (555) 919-2020</p><p>Description: Major facility with oncology and surgical units.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Sunrise Children’s Hospital</h3><p>📍 99 Hope St, Brooklyn, NY</p><p>☎️ (555) 303-4040</p><p>Description: Specialized in pediatric surgery and neonatal care.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Downtown Community Medical Center</h3><p>📍 15 Wall St, Manhattan, NY</p><p>☎️ (555) 400-5050</p><p>Description: Community-focused care with general practice and ER.</p><a href="#">Visit Website</a></div>
+    <div class="listing"><h3>Bayview Regional Hospital</h3><p>📍 600 Shore Rd, Queens, NY</p><p>☎️ (555) 606-7070</p><p>Description: Specialized in rehabilitation and elderly care.</p><a href="#">Visit Website</a></div>
+  </div>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="stats-container">
+      <div class="stat"><h2>269</h2><p>Beds in Operation</p></div>
+      <div class="stat"><h2>+682K</h2><p>Clinic Visits</p></div>
+      <div class="stat"><h2>88,889</h2><p>ER Visits</p></div>
+      <div class="stat"><h2>1,185</h2><p>Births</p></div>
+    </div>
+  </section>
+
+  <!-- News Section -->
+  <section class="news">
+    <h2>Latest News</h2>
+    <div class="news-cards">
+      <div class="news-card">
+        <img src="news1.jpg" alt="News">
+        <p class="date">AUG 14, 2025 • PRESS RELEASE</p>
+        <h3>Queens Hospital Celebrates Summer Program</h3>
+      </div>
+      <div class="news-card">
+        <img src="news2.jpg" alt="News">
+        <p class="date">AUG 04, 2025 • PRESS RELEASE</p>
+        <h3>NYC Hospitals Recognized by American Heart Association</h3>
+      </div>
+      <div class="news-card">
+        <img src="news3.jpg" alt="News">
+        <p class="date">JUL 30, 2025 • PRESS RELEASE</p>
+        <h3>Top Providers Ranked by Healthfirst</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <h2>Need Immediate Help?</h2>
+    <p>Call <strong>911</strong> or our NYC Health Hotline at <strong>(555) 911-0000</strong></p>
+    <button>Book an Appointment</button>
+  </section>
+
+  <!-- Mega Footer -->
+  <footer class="mega-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <h2>NYC Health Directory</h2>
+        <p>Connecting New Yorkers to trusted healthcare providers across all boroughs.</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h4>Patients & Visitors</h4>
+          <a href="#">MyChart</a><br>
+          <a href="#">Find a Doctor</a><br>
+          <a href="#">Locations</a>
+        </div>
+        <div>
+          <h4>About Us</h4>
+          <a href="#">Careers</a><br>
+          <a href="#">Newsroom</a><br>
+          <a href="#">Community</a>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <a href="#">Donate</a><br>
+          <a href="#">Contact Us</a><br>
+          <a href="#">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 NYC Health Directory · All Rights Reserved</p>
+      <div class="socials">
+        <a href="#">Facebook</a>
+        <a href="#">X</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Filters Script -->
+  <script>
+    function applyFilters() {
+      const searchText = document.getElementById('searchBar').value.toLowerCase();
+      const borough = document.getElementById('boroughFilter').value;
+      const specialty = document.getElementById('specialtyFilter').value;
+      const listings = document.querySelectorAll('.listing');
+
+      listings.forEach(listing => {
+        const text = listing.innerText.toLowerCase();
+        let match = true;
+
+        if (searchText && !text.includes(searchText)) match = false;
+        if (borough !== 'all' && !text.includes(borough.toLowerCase())) match = false;
+        if (specialty !== 'all' && !text.includes(specialty.toLowerCase())) match = false;
+
+        listing.style.display = match ? 'block' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

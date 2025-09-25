@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cipher Intro</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #00ff66;
+      font-family: "Courier New", monospace;
+      font-size: 18px;
+      overflow: hidden;
+      opacity: 0; /* start hidden */
+      transition: opacity 1.5s ease;
+      position: relative;
+    }
+
+    .ascii-bg {
+      position: fixed;
+      top: 50%;
+      left: 70%;
+      transform: translate(-50%, -50%);
+      font-family: monospace;
+      font-size: 20px;
+      white-space: pre;
+      line-height: 1.2;
+      color: rgba(255, 0, 0, 0.85);
+      text-shadow: 0 0 5px #ff0000, 0 0 15px #ff3333, 0 0 30px #ff6666;
+      pointer-events: none;
+      z-index: 0;
+      display: none;
+      animation: pulse 3s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        text-shadow: 0 0 5px #ff0000, 0 0 15px #ff3333, 0 0 30px #ff6666;
+      }
+      50% {
+        text-shadow: 0 0 20px #ff1a1a, 0 0 40px #ff4d4d, 0 0 60px #ff8080;
+      }
+    }
+
+    #splash {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    #splash h1 {
+      font-size: 42px;
+      color: #ff0033;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      text-shadow: 0 0 10px #ff0033, 0 0 20px #ff0000, 0 0 30px #990000;
+      animation: flicker 2s infinite;
+    }
+
+    #splash button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: none;
+      border: 2px solid #ff0033;
+      color: #ff0033;
+      font-size: 20px;
+      font-family: "Courier New", monospace;
+      cursor: pointer;
+      text-shadow: 0 0 10px #ff0033, 0 0 20px #ff0000;
+      animation: flicker 3s infinite;
+      transition: all 0.3s ease;
+    }
+
+    #splash button:hover {
+      background: #ff0033;
+      color: #000;
+      text-shadow: none;
+    }
+
+    @keyframes flicker {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.3; }
+    }
+
+    .blinking {
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* Wrapper keeps screen + button stacked */
+    #content-wrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    #screen {
+      flex: 1;
+      padding: 40px;
+      white-space: pre-wrap;
+      line-height: 1.4em;
+      overflow-y: auto;
+      display: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    #continueBtn {
+      display: none;
+      padding: 15px 30px;
+      font-size: 20px;
+      border: 2px solid #ff0033;
+      background: none;
+      color: #ff0033;
+      font-family: "Courier New", monospace;
+      cursor: pointer;
+      text-shadow: 0 0 10px #ff0033;
+    }
+    #continueBtn:hover {
+      background: #ff0033;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <!-- ASCII Background -->
+  <pre class="ascii-bg">
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠁⠀⠀⠈⠉⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⢀⣠⣤⣤⣤⣤⣄⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⠁⠀⠀⠀⠀⠾⣿⣿⣿⣿⠿⠛⠉⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⣤⣶⣤⣉⣿⣿⡯⣀⣴⣿⡗⠀⠀⠀⠀⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⡈⠀⠀⠉⣿⣿⣶⡉⠀⠀⣀⡀⠀⠀⠀⢻⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⡇⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⢸⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠉⢉⣽⣿⠿⣿⡿⢻⣯⡍⢁⠄⠀⠀⠀⣸⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠐⡀⢉⠉⠀⠠⠀⢉⣉⠀⡜⠀⠀⠀⠀⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⠿⠁⠀⠀⠀⠘⣤⣭⣟⠛⠛⣉⣁⡜⠀⠀⠀⠀⠀⠛⠿⣿⣿⣿
+⡿⠟⠛⠉⠉⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⡀⠀⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+  </pre>
+
+  <!-- Splash Screen -->
+  <div id="splash">
+    <h1>MISSION OBJECTIVE</h1>
+    <button id="startBtn">Click to Read</button>
+  </div>
+
+  <!-- Main Content Wrapper -->
+  <div id="content-wrapper">
+    <div id="screen"></div>
+    <button id="continueBtn">Proceed to Phase 1</button>
+  </div>
+
+  <!-- Audio Effects -->
+  <audio id="static" src="https://actions.google.com/sounds/v1/ambiences/white_noise.ogg" preload="auto"></audio>
+  <audio id="boom" src="https://actions.google.com/sounds/v1/impacts/metal_thud_and_rattle.ogg" preload="auto"></audio>
+  <audio id="glitch" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+  <audio id="cipherAudio" src="audio.mp3" preload="auto" loop></audio>
+
+  <script>
+    window.addEventListener("load", () => {
+      document.body.style.opacity = "1";
+    });
+
+    const hackerIntro = [
+      ">> ACCESS GRANTED...",
+      ">> Incoming transmission...",
+      "This is Cipher.",
+      "You’ve stepped into a world where hesitation gets you killed.",
+      "The job ahead? High-risk. The stakes? Higher.",
+      "We’re talking millions on the line — but so is your freedom… maybe even your life.",
+      "Starlight Memorial Hospital is our target. A fortress rotting from within.",
+      "Breaching it won’t be easy. One wrong keystroke, and you’re exposed.",
+      "I’ll guide you — but make no mistake — the path is brutal.",
+      "Prove yourself tonight, Operative...",
+      "Or vanish like the countless failures before you — nameless, forgotten, erased.\n"
+    ];
+
+    const missionHeader = `
+██████████████████████████████████████████████████████
+||    DECRYPTED OBJECTIVES : CIPHER PROTOCOL        ||
+||    PRIORITY LEVEL : TOP SECRET [EYES ONLY]       ||
+██████████████████████████████████████████████████████
+
+TARGET: Starlight Hospital – New York
+---------------------------------------------------
+Ransom Demand: $5,000,000 in Bitcoin (48-hour deadline)
+Risk: Detection by law enforcement / federal cyber units
+---------------------------------------------------
+
+[ MITRE ATT&CK STYLE OPERATIONAL PHASES ]
+`;
+
+    const mitrePhases = [
+      "[1] Reconnaissance",
+      "    - Gather intel on hospital staff via OSINT",
+      "    - Identify IT admins, HR staff, and vulnerable employees",
+      "    - Map external-facing systems\n",
+
+      "[2] Initial Access",
+      "    - Craft phishing campaign targeting HR Coordinator",
+      "    - Deliver payload disguised as payroll update",
+      "    - Exploit unpatched Exchange server\n",
+
+      "[3] Execution",
+      "    - Deploy malicious PowerShell scripts",
+      "    - Establish backdoor for command and control\n",
+
+      "[4] Persistence",
+      "    - Create hidden admin accounts",
+      "    - Modify registry for startup malware persistence\n",
+
+      "[5] Privilege Escalation",
+      "    - Dump domain credentials",
+      "    - Compromise Active Directory administrator accounts\n",
+
+      "[6] Exfiltration",
+      "    - Extract patient health records (HIPAA data)",
+      "    - Transfer sensitive files to offshore servers\n",
+
+      "[7] Impact",
+      "    - Encrypt hospital servers and backups",
+      "    - Display ransom note demanding $5M in Bitcoin",
+      "    - Threaten public release of patient data if unpaid",
+      "---------------------------------------------------"
+    ];
+
+    const screen = document.getElementById("screen");
+    const continueBtn = document.getElementById("continueBtn");
+
+    const staticSound = document.getElementById("static");
+    const boomSound = document.getElementById("boom");
+    const glitchSound = document.getElementById("glitch");
+    const cipherAudio = document.getElementById("cipherAudio");
+
+    let lineIndex = 0;
+    let charIndex = 0;
+
+    function playEffect(type) {
+      if (type === "static") { staticSound.play().catch(()=>{}); }
+      if (type === "boom") { boomSound.play().catch(()=>{}); }
+      if (type === "glitch") { glitchSound.play().catch(()=>{}); }
+    }
+
+    function typeLine(text, callback, speed = 40) {
+      if (charIndex < text.length) {
+        screen.innerHTML += text.charAt(charIndex);
+        charIndex++;
+        setTimeout(() => typeLine(text, callback, speed), speed);
+      } else {
+        screen.innerHTML += "\n";
+        charIndex = 0;
+        screen.scrollTop = screen.scrollHeight;
+        if (callback) setTimeout(callback, 500);
+      }
+    }
+
+    function typeHackerIntro() {
+      if (lineIndex < hackerIntro.length) {
+        if (lineIndex === 0) {
+          cipherAudio.currentTime = 0;
+          cipherAudio.play().catch(()=>{});
+        }
+        if (lineIndex === 1) playEffect("static");
+        if (lineIndex === 3 || lineIndex === 10) playEffect("boom");
+        if (lineIndex === 6) playEffect("glitch");
+
+        typeLine(hackerIntro[lineIndex], () => {
+          lineIndex++;
+          typeHackerIntro();
+        });
+      } else {
+        cipherAudio.pause();
+        cipherAudio.currentTime = 0;
+        setTimeout(showMissionHeader, 1500);
+      }
+    }
+
+    function showMissionHeader() {
+      playEffect("glitch");
+      screen.innerHTML += "\n>> Decrypting Mission Objectives...\n\n";
+      screen.scrollTop = screen.scrollHeight;
+
+      setTimeout(() => {
+        screen.innerHTML += missionHeader + "\n";
+        screen.scrollTop = screen.scrollHeight;
+        setTimeout(showMitrePhases, 1000);
+      }, 1200);
+    }
+
+    function showMitrePhases() {
+      let i = 0;
+      function revealPhase() {
+        if (i < mitrePhases.length) {
+          screen.innerHTML += mitrePhases[i] + "\n";
+          screen.scrollTop = screen.scrollHeight;
+          playEffect("glitch");
+          i++;
+          setTimeout(revealPhase, 800);
+        } else {
+          showContinue();
+        }
+      }
+      revealPhase();
+    }
+
+    function showContinue() {
+      continueBtn.style.display = "block";
+      continueBtn.addEventListener("click", () => {
+        window.location.href = "phase1intro.html";
+      });
+    }
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      }
+      document.querySelector(".ascii-bg").style.display = "block";
+      document.getElementById("splash").style.display = "none";
+      document.getElementById("content-wrapper").style.display = "flex";
+      screen.style.display = "block";
+      typeHackerIntro();
+    });
+  </script>
+</body>
+</html>

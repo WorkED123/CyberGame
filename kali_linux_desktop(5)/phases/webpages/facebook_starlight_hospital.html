@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Facebook - Starlight Hospital</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #e9ebee; }
+    /* Top Nav */
+    header { background: #3b5998; color: white; display: flex; align-items: center; padding: 6px 16px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+    header .logo { font-weight: bold; font-size: 22px; margin-right: 20px; }
+    header input { flex: 1; padding: 6px; border: none; border-radius: 16px; }
+    header .icons { display: flex; gap: 20px; margin-left: 20px; font-size: 18px; }
+
+    .container { display: flex; margin-top: 60px; padding: 20px; gap: 20px; }
+    .left, .feed, .right { background: none; }
+    .left { flex: 1; }
+    .feed { flex: 2; }
+    .right { flex: 1; }
+
+    /* Profile Header */
+    .profile-header { background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .cover { width: 100%; height: 220px; background: #4a7ba7; border-top-left-radius: 6px; border-top-right-radius: 6px; position: relative; }
+    .profile-photo { width: 140px; height: 140px; border-radius: 50%; border: 4px solid white; object-fit: cover; position: absolute; left: 50%; bottom: -70px; transform: translateX(-50%); }
+    .profile-info { text-align: center; padding: 90px 20px 20px; border-bottom: 1px solid #ddd; }
+    .profile-info h2 { margin: 0; font-size: 24px; }
+    .profile-info p { margin: 6px 0; color: #555; font-size: 15px; }
+
+    /* Posts */
+    .post { background: white; margin-bottom: 20px; padding: 15px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .post-header img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    .post strong { display: block; }
+    .post-date { font-size: 12px; color: #666; }
+    .post-text { margin: 10px 0; line-height: 1.5; }
+    .reactions { display: flex; justify-content: space-between; font-size: 14px; color: #555; margin-top: 8px; }
+    .reaction-buttons { display: flex; justify-content: space-around; border-top: 1px solid #ddd; margin-top: 8px; padding-top: 8px; font-size: 14px; color: #666; }
+
+    /* Sidebars */
+    .sidebar-section { margin-bottom: 20px; }
+    .sidebar-section h4 { margin: 10px 0; font-size: 14px; color: #555; }
+    .ad, .birthday, .contacts { background: white; padding: 10px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    .ad h4, .birthday h4, .contacts h4 { margin: 0 0 6px; font-size: 14px; color: #555; }
+  </style>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <header>
+    <div class="logo">facebook</div>
+    <input type="text" placeholder="Search Facebook">
+    <div class="icons">🏠 👥 🏷️ 💬 🔔 👤</div>
+  </header>
+
+  <div class="container">
+    <!-- Left Sidebar -->
+    <div class="left">
+      <div class="sidebar-section"><h4>Menu</h4>
+        <p>Home</p><p>About</p><p>Photos</p><p>Events</p><p>Community</p>
+      </div>
+      <div class="sidebar-section"><h4>Your Shortcuts</h4>
+        <p>Health Awareness Group</p><p>Community Care NY</p><p>Hospital Volunteers</p>
+      </div>
+    </div>
+
+    <!-- Feed -->
+    <div class="feed">
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="cover">
+          <img src="starlight_hospital.webp" alt="Starlight Hospital" class="profile-photo">
+        </div>
+        <div class="profile-info">
+          <h2>Starlight Hospital</h2>
+          <p>Located in New York, NY · Providing patient-centered care since 1984</p>
+        </div>
+      </div>
+
+      <!-- All 12 Posts -->
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">2h · New York, NY</div></div></div>
+        <div class="post-text">We are honored to be ranked among the <b>Top 10 hospitals in New York State</b> for patient care this year 🏥👏.</div>
+        <div class="reactions"><div>👍 ❤️ 👏 · 412</div><div>96 Comments · 34 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">1d · New York, NY</div></div></div>
+        <div class="post-text">Our <b>pediatric wing renovation</b> is now complete! Bright colors, interactive play areas, and state-of-the-art equipment 💙.</div>
+        <div class="reactions"><div>👍 ❤️ 😍 · 350</div><div>82 Comments · 21 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">3d · New York, NY</div></div></div>
+        <div class="post-text">This week we celebrated <b>Nurses Appreciation Day</b> 🩺. Thank you to the amazing nurses who go above and beyond.</div>
+        <div class="reactions"><div>👍 ❤️ 👏 · 498</div><div>134 Comments · 56 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">1w · New York, NY</div></div></div>
+        <div class="post-text">Our ER team responded to a <b>record number of patients</b> during last weekend’s heatwave 💪.</div>
+        <div class="reactions"><div>👍 ❤️ 😮 · 286</div><div>65 Comments · 18 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">2w · New York, NY</div></div></div>
+        <div class="post-text">We hosted our <b>annual community blood drive</b> in partnership with the Red Cross 🩸. Thank you donors!</div>
+        <div class="reactions"><div>👍 ❤️ 👏 · 315</div><div>72 Comments · 25 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">2w · New York, NY</div></div></div>
+        <div class="post-text">Excited to announce our <b>new telehealth program</b>, making it easier to connect with doctors from home 💻.</div>
+        <div class="reactions"><div>👍 ❤️ 💡 · 229</div><div>43 Comments · 12 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">3w · New York, NY</div></div></div>
+        <div class="post-text">Congratulations to Dr. Rebecca Lee for being featured in <b>NYC’s Top Doctors 2025</b> 🎉.</div>
+        <div class="reactions"><div>👍 ❤️ 👏 · 190</div><div>27 Comments · 9 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">1mo · New York, NY</div></div></div>
+        <div class="post-text">We’ve opened a new <b>cancer research center</b> dedicated to cutting-edge treatments. Hope begins here 💙.</div>
+        <div class="reactions"><div>👍 ❤️ 😢 · 276</div><div>59 Comments · 22 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">1mo · New York, NY</div></div></div>
+        <div class="post-text">Hosting free <b>diabetes screening events</b> every Saturday this month 🩺.</div>
+        <div class="reactions"><div>👍 ❤️ 👏 · 199</div><div>41 Comments · 10 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">2mo · New York, NY</div></div></div>
+        <div class="post-text">Proud to be <b>plastic-free in our cafeteria</b> 🌎. All single-use plastics swapped for sustainable alternatives.</div>
+        <div class="reactions"><div>👍 ❤️ 👏 · 167</div><div>33 Comments · 7 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">3mo · New York, NY</div></div></div>
+        <div class="post-text">We are offering free <b>flu shots</b> for seniors throughout winter 💉.</div>
+        <div class="reactions"><div>👍 ❤️ 👏 · 212</div><div>48 Comments · 14 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+      <div class="post">
+        <div class="post-header"><img src="starlight_hospital.webp"><div><strong>Starlight Hospital</strong><div class="post-date">3mo · New York, NY</div></div></div>
+        <div class="post-text">Celebrating 40 years of serving the NYC community 🎉. Thank you for trusting Starlight Hospital ❤️.</div>
+        <div class="reactions"><div>👍 ❤️ 👏 · 321</div><div>72 Comments · 29 Shares</div></div>
+        <div class="reaction-buttons"><div>👍 Like</div><div>💬 Comment</div><div>🔄 Share</div></div>
+      </div>
+
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="right">
+      <div class="ad">
+        <h4>Sponsored</h4>
+        <p>MedSupply Co · Order hospital-grade masks today</p>
+        <p>HealthyLife · Download your free nutrition guide</p>
+      </div>
+      <div class="birthday">
+        <h4>Upcoming Events</h4>
+        <p>Community Health Fair – Oct 15</p>
+        <p>CPR Training Workshop – Nov 3</p>
+      </div>
+      <div class="contacts">
+        <h4>Page Admins</h4>
+        <p>Rebecca Lee</p><p>Michael Thomas</p><p>Sarah Nguyen</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zero Day - The Game</title>
+  <!-- Hacker font -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    #matrixCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #ff0000;
+    }
+
+    h1 {
+      font-family: 'VT323', monospace;
+      font-size: 8vw;
+      margin: 0;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 40px #ff3333;
+    }
+
+    h2 {
+      font-family: 'VT323', monospace;
+      font-size: 2.5vw;
+      margin: 15px 0 20px 0;
+      color: #fff;
+      text-shadow: 0 0 5px #ff0000;
+      display: none; /* hidden until Begin */
+    }
+
+    input {
+      font-family: 'VT323', monospace;
+      font-size: 1.5em;
+      padding: 10px;
+      border: 2px solid #ff0000;
+      border-radius: 4px;
+      background: #000;
+      color: #ff0000;
+      text-align: center;
+      outline: none;
+      text-shadow: 0 0 5px #ff0000;
+      display: none; /* hidden until Begin is clicked */
+    }
+
+    .btn {
+      font-family: 'VT323', monospace;
+      padding: 15px 40px;
+      border: 2px solid #ff0000;
+      border-radius: 4px;
+      font-size: 2em;
+      margin-top: 20px;
+      background: transparent;
+      color: #ff0000;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      text-shadow: 0 0 10px #ff0000;
+    }
+
+    .btn:hover {
+      background: #ff0000;
+      color: #000;
+      box-shadow: 0 0 15px #ff0000, 0 0 30px #ff3333;
+    }
+
+    #enterBtn {
+      display: none; /* hidden until Begin is clicked */
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="matrixCanvas"></canvas>
+
+  <div class="content">
+    <h1 id="title">SYSTEM OVERRIDE</h1>
+    <button class="btn" id="beginBtn">BEGIN</button>
+    <h2 id="codeLabel">ENTER ACCESS CODE</h2>
+    <input type="text" id="codeInput" placeholder="Enter Code">
+    <button class="btn" id="enterBtn">ENTER</button>
+  </div>
+
+  <!-- Creepy typing sound (trimmed 15s loop) -->
+  <audio id="typingSound" src="typing-creepy.mp3" preload="auto" loop></audio>
+
+  <script>
+    function startGame() {
+      scramblingActive = false;
+      typingSound.pause();
+      typingSound.currentTime = 0;
+      // Redirect into NEW_Mittre_INTRO.html at the play button
+      window.location.href = "New_MITTRE_INTRO.html#playBtn";
+    }
+
+    // === MATRIX RAIN ===
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let fontSize = 18;
+    let columns;
+    let drops;
+    const chars = "01@#$%&*{}<>?!";
+
+    function resizeCanvas() {
+      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+      columns = Math.floor(canvas.width / fontSize);
+      drops = Array(columns).fill(1);
+    }
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#ff0000";
+      ctx.font = fontSize + "px 'VT323', monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillStyle = Math.random() > 0.98 ? "#fff" : "#ff0000";
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 50);
+    window.onresize = resizeCanvas;
+    resizeCanvas();
+
+    // === SCRAMBLE LOOP ===
+    const title = document.getElementById("title");
+    const finalText = title.textContent;
+    const scrambleChars = "01@#$%&*{}<>?!";
+    let scramblingActive = true;
+
+    function scrambleOnce(callback) {
+      let iteration = 0;
+      const textArray = finalText.split("");
+
+      function frame() {
+        let newText = textArray
+          .map((char, i) => {
+            if (i < iteration) return char;
+            return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+          })
+          .join("");
+
+        title.textContent = newText;
+
+        if (iteration <= textArray.length) {
+          iteration++;
+          setTimeout(frame, 80);
+        } else {
+          if (callback) callback();
+        }
+      }
+
+      frame();
+    }
+
+    function scrambleLoop() {
+      if (!scramblingActive) return;
+      scrambleOnce(() => {
+        if (scramblingActive) {
+          setTimeout(scrambleLoop, 2000);
+        }
+      });
+    }
+
+    setTimeout(scrambleLoop, 1000);
+
+    // === ELEMENTS ===
+    const beginBtn = document.getElementById("beginBtn");
+    const codeInput = document.getElementById("codeInput");
+    const enterBtn = document.getElementById("enterBtn");
+    const codeLabel = document.getElementById("codeLabel");
+    const typingSound = document.getElementById("typingSound");
+
+    // Step 1: Show code input + start creepy music on Begin
+    beginBtn.addEventListener("click", () => {
+      // Force fullscreen
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen(); // Safari
+      } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen(); // IE11
+      }
+
+      beginBtn.style.display = "none";
+      codeLabel.style.display = "block";
+      codeInput.style.display = "inline-block";
+      enterBtn.style.display = "inline-block";
+
+      // Start creepy music with fade-in
+      typingSound.volume = 0;
+      typingSound.muted = false;
+      typingSound.play().catch(() => {});
+      let vol = 0;
+      const fade = setInterval(() => {
+        if (vol < 1) {
+          vol += 0.05;
+          typingSound.volume = vol;
+        } else {
+          clearInterval(fade);
+        }
+      }, 200);
+    });
+
+    // Step 2: Validate code when Enter is clicked
+    enterBtn.addEventListener("click", () => {
+      if (codeInput.value.trim().toLowerCase() === "workedrocks") {
+        startGame();
+      } else {
+        alert("ACCESS DENIED");
+      }
+    });
+  </script>
+</body>
+</html>

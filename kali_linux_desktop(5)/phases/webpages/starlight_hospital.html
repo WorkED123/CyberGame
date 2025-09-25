@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Starlight Hospital</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #fff; }
+
+    /* Utility Bar */
+    .utility-bar {
+      background: #f8f8f8;
+      padding: 5px 40px;
+      font-size: 14px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    .utility-bar a { color: #004080; text-decoration: none; }
+    .utility-bar a:hover { text-decoration: underline; }
+
+    /* Header */
+    header {
+      background: #004080;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header .logo { font-size: 26px; font-weight: bold; }
+    nav { display: flex; gap: 25px; }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: bold;
+    }
+    nav a:hover { text-decoration: underline; }
+
+    /* Quick Access Icons */
+    .quick-links {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      background: #fafafa;
+      padding: 20px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .quick-link {
+      text-align: center;
+      width: 120px;
+      font-size: 14px;
+      color: #004080;
+      cursor: pointer;
+    }
+    .quick-link:hover { text-decoration: underline; }
+    .quick-link img {
+      width: 40px;
+      margin-bottom: 8px;
+    }
+
+    /* Hero section */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 60px 40px;
+      background: #f4f4f4;
+    }
+    .hero-text { flex: 1; padding-right: 40px; }
+    .hero-text h1 { font-size: 40px; color: #004080; margin-bottom: 15px; }
+    .hero-text h1 span { color: #2a9d8f; }
+    .hero-text p { font-size: 18px; color: #444; margin-bottom: 20px; }
+    .hero-img { flex: 1; text-align: right; }
+    .hero-img img { max-width: 100%; border-radius: 10px; }
+
+    /* Accomplishments section */
+    .accomplishments {
+      background: white;
+      padding: 50px 40px;
+      text-align: center;
+    }
+    .accomplishments h2 { font-size: 28px; margin-bottom: 25px; color: #004080; }
+    .cards {
+      display: flex;
+      gap: 25px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .card {
+      background: #f9f9f9;
+      border-radius: 10px;
+      padding: 25px;
+      width: 280px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .card h3 { color: #2a9d8f; font-size: 20px; margin-bottom: 10px; }
+    .card p { font-size: 15px; color: #555; }
+
+    /* News Section */
+    .news {
+      background: #fafafa;
+      padding: 50px 40px;
+    }
+    .news h2 { text-align: center; font-size: 28px; margin-bottom: 30px; color: #004080; }
+    .news-articles { display: flex; gap: 25px; flex-wrap: wrap; justify-content: center; }
+    .article {
+      background: #fff;
+      border-radius: 10px;
+      width: 300px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .article h3 { font-size: 18px; color: #2a9d8f; margin-bottom: 10px; }
+    .article p { font-size: 14px; color: #555; }
+
+    /* Testimonials */
+    .testimonials {
+      padding: 50px 40px;
+      text-align: center;
+    }
+    .testimonials h2 { font-size: 28px; margin-bottom: 25px; color: #004080; }
+    .testimonial {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .testimonial span { display: block; margin-top: 10px; font-weight: bold; color: #2a9d8f; }
+
+    /* Footer */
+    footer {
+      background: #004080;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+    footer .footer-links {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    footer .footer-links a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    footer .footer-links a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- Utility Bar -->
+  <div class="utility-bar">
+    <a href="#">English</a>
+    <a href="#">Español</a>
+    <a href="#">Give a Gift</a>
+    <a href="#">Login</a>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">Starlight Hospital</div>
+    <nav>
+      <a href="#">Find & Book Care</a>
+      <a href="#">Locations</a>
+      <a href="#">Areas of Care</a>
+      <a href="#">Patient Portal</a>
+      <a href="#">Pay a Bill</a>
+    </nav>
+  </header>
+
+  <!-- Quick Links -->
+  <div class="quick-links">
+    <div class="quick-link"><img src="https://img.icons8.com/ios-filled/50/004080/hospital-room.png"/>Find & Book Care</div>
+    <div class="quick-link"><img src="https://img.icons8.com/ios-filled/50/004080/marker.png"/>Locations</div>
+    <div class="quick-link"><img src="https://img.icons8.com/ios-filled/50/004080/heart-with-pulse.png"/>Areas of Care</div>
+    <div class="quick-link"><img src="https://img.icons8.com/ios-filled/50/004080/id-verified.png"/>Patient Portal</div>
+    <div class="quick-link"><img src="https://img.icons8.com/ios-filled/50/004080/money.png"/>Pay a Bill</div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>RAISING HEALTH FOR <span>MORE FAMILIES</span> THAN EVER</h1>
+      <p>With cutting-edge research, compassionate care, and innovative technology, Starlight Hospital is proud to serve our community and beyond.</p>
+    </div>
+    <div class="hero-img">
+      <img src="starlight_hospital.webp" alt="Starlight Hospital">
+    </div>
+  </section>
+
+  <!-- Accomplishments -->
+  <section class="accomplishments">
+    <h2>Recent Accomplishments</h2>
+    <div class="cards">
+      <div class="card"><h3>Top Ranked</h3><p>Named one of the Top 10 Hospitals in the state for patient safety and quality of care in 2025.</p></div>
+      <div class="card"><h3>Medical Innovation</h3><p>Pioneered a new AI-driven diagnostic tool that reduces ER wait times by 30%.</p></div>
+      <div class="card"><h3>Community Impact</h3><p>Launched a free telehealth program serving over 50,000 families in underserved areas.</p></div>
+      <div class="card"><h3>Research Excellence</h3><p>Our Cancer Research Institute published breakthrough findings on immunotherapy treatments.</p></div>
+    </div>
+  </section>
+
+  <!-- News -->
+  <section class="news">
+    <h2>Latest News</h2>
+    <div class="news-articles">
+      <div class="article"><h3>Starlight Hospital Expands Cardiology Wing</h3><p>Our new state-of-the-art facility doubles patient capacity and introduces robotic-assisted surgery suites.</p></div>
+      <div class="article"><h3>National Award for Nursing Excellence</h3><p>Our nurses have been recognized nationally for their dedication, skill, and compassion in patient care.</p></div>
+      <div class="article"><h3>Green Energy Transition</h3><p>Starlight becomes the first hospital in the region powered 100% by renewable energy.</p></div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <h2>What Our Patients Say</h2>
+    <div class="testimonial">“The doctors at Starlight saved my life. I felt truly cared for every step of the way.”<span>- Maria G.</span></div>
+    <div class="testimonial">“From the ER to the recovery room, the staff were incredible. I wouldn’t go anywhere else.”<span>- James T.</span></div>
+    <div class="testimonial">“The telehealth program made it easy for my family to get care without leaving home.”<span>- Aisha K.</span></div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Starlight Hospital | Excellence in Care, Innovation, and Community
+    <div class="footer-links">
+      <a href="#">Emergency: (555) 911-0000</a> |
+      <a href="#">Careers</a> |
+      <a href="#">Volunteer</a> |
+      <a href="#">Privacy Policy</a>
+    </div>
+  </footer>
+
+</body>
+</html>

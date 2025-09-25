@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kali Linux Desktop</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: url('kalilinux.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: monospace;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    #topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      background: rgba(20, 20, 20, 0.9);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px;
+      font-size: 14px;
+      z-index: 10;
+      box-sizing: border-box;
+      color: #e63946;
+    }
+    #topbar .left { font-weight: bold; letter-spacing: 1px; }
+    #topbar .right { font-family: monospace; white-space: nowrap; }
+
+    #desktop {
+      position: absolute;
+      top: 50px;
+      left: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      z-index: 1;
+    }
+
+    .desktop-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 70px;
+      cursor: pointer;
+      color: white;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .terminal-icon { background: black; border-radius: 50%; font-size: 22px; font-weight: bold; color: white; width: 48px; height: 48px; display:flex;align-items:center;justify-content:center;}
+    .trash-icon { background: white; border: 2px solid #ccc; width: 48px; height: 48px; display:flex;align-items:center;justify-content:center;}
+    .trash-icon::before { content: "♻"; color: green; font-size: 20px; }
+    .folder-icon { background: #f1c40f; border: 2px solid #d4ac0d; border-radius: 3px; width:48px;height:48px;}
+    .google-icon { background: white; border-radius: 50%; font-size: 20px; font-weight: bold; color: #4285F4; border: 2px solid #4285F4; width:48px;height:48px; display:flex;align-items:center;justify-content:center;}
+    .email-icon { background: white; border: 2px solid #ccc; width: 48px; height: 32px; position:relative;}
+    .email-icon::before { content:""; position:absolute; left:0; top:0; width:0; height:0; border-left:24px solid transparent; border-right:24px solid transparent; border-top:16px solid #ccc;}
+
+    #terminal-window, #chrome-window, #email-window {
+      position: fixed;
+      top: 30px;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 30px);
+      display: none;
+      z-index: 50;
+      background: transparent;
+      border: none;
+    }
+    #terminal-iframe, #chrome-iframe, #email-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+    }
+
+    #chatbox-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+    }
+    #chatbox-frame {
+      width: 520px;
+      height: 650px;
+      border: none;
+      background: transparent;
+    }
+
+    /* 🔹 Notification badge */
+    #chatbox-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    #chatbox-notification {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: red;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div id="topbar"><div class="left">Kali Linux</div><div class="right" id="clock"></div></div>
+
+  <div id="desktop">
+    <div class="desktop-icon" id="terminal-icon">
+      <div class="terminal-icon">></div>
+      <div>Terminal</div>
+    </div>
+    <div class="desktop-icon"><div class="folder-icon"></div><div>Home</div></div>
+    <div class="desktop-icon"><div class="folder-icon"></div><div>Documents</div></div>
+    <div class="desktop-icon"><div class="folder-icon"></div><div>Tools</div></div>
+    <div class="desktop-icon"><div class="trash-icon"></div><div>Trash</div></div>
+    <div class="desktop-icon" id="google"><div class="google-icon">G</div><div>Google</div></div>
+    <div class="desktop-icon" id="email"><div class="email-icon"></div><div>Email</div></div>
+  </div>
+
+  <!-- Terminal -->
+  <div id="terminal-window">
+    <iframe id="terminal-iframe" src="terminal.html"></iframe>
+  </div>
+
+  <!-- Chrome -->
+  <div id="chrome-window">
+    <iframe id="chrome-iframe" src="phases/chrome.html"></iframe>
+  </div>
+
+  <!-- Email -->
+  <div id="email-window">
+    <iframe id="email-iframe" src="phases/email.html"></iframe>
+  </div>
+
+  <!-- Chatbox with notification badge -->
+  <div id="chatbox-container">
+    <div id="chatbox-wrapper">
+      <iframe src="chatbot.html" id="chatbox-frame" allowtransparency="true"></iframe>
+      <div id="chatbox-notification">1</div>
+    </div>
+  </div>
+
+  <script>
+    function updateClock() {
+      document.getElementById("clock").innerText = new Date().toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    const terminalWindow = document.getElementById("terminal-window");
+    const terminalIframe = document.getElementById("terminal-iframe");
+    const chromeWindow = document.getElementById("chrome-window");
+    const chromeIframe = document.getElementById("chrome-iframe");
+    const emailWindow = document.getElementById("email-window");
+    const emailIframe = document.getElementById("email-iframe");
+    const chatboxNotification = document.getElementById("chatbox-notification");
+
+    // === TERMINAL ===
+    document.getElementById("terminal-icon").addEventListener("click", () => {
+      const closed = localStorage.getItem("terminalClosed") === "true";
+      const minimized = localStorage.getItem("terminalMinimized") === "true";
+
+      if (closed) {
+        terminalIframe.src = "terminal.html"; // new session
+        terminalWindow.style.display = "block";
+        localStorage.setItem("terminalClosed", "false");
+        localStorage.setItem("terminalMinimized", "false");
+      } else if (minimized) {
+        terminalWindow.style.display = "block"; // restore
+        localStorage.setItem("terminalMinimized", "false");
+      } else {
+        terminalWindow.style.display = "block"; // already open
+      }
+    });
+
+    function closeTerminal() {
+      terminalWindow.style.display = "none";
+      terminalIframe.src = "about:blank";
+      localStorage.setItem("terminalClosed", "true");
+      localStorage.setItem("terminalMinimized", "false");
+    }
+    function minTerminal() {
+      terminalWindow.style.display = "none"; // hide only
+      localStorage.setItem("terminalClosed", "false");
+      localStorage.setItem("terminalMinimized", "true");
+    }
+
+    // === CHROME ===
+    document.getElementById("google").addEventListener("click", () => {
+      const closed = localStorage.getItem("chromeClosed") === "true";
+      const minimized = localStorage.getItem("chromeMinimized") === "true";
+
+      if (closed) {
+        chromeIframe.src = "phases/chrome.html";
+        chromeWindow.style.display = "block";
+        localStorage.setItem("chromeClosed", "false");
+        localStorage.setItem("chromeMinimized", "false");
+      } else if (minimized) {
+        chromeWindow.style.display = "block";
+        localStorage.setItem("chromeMinimized", "false");
+      } else {
+        chromeWindow.style.display = "block";
+      }
+    });
+
+    function closeChrome() {
+      chromeWindow.style.display = "none";
+      chromeIframe.src = "about:blank";
+      localStorage.setItem("chromeClosed", "true");
+      localStorage.setItem("chromeMinimized", "false");
+    }
+    function minChrome() {
+      chromeWindow.style.display = "none";
+      localStorage.setItem("chromeClosed", "false");
+      localStorage.setItem("chromeMinimized", "true");
+    }
+
+    // === EMAIL ===
+    document.getElementById("email").addEventListener("click", () => {
+      const closed = localStorage.getItem("emailClosed") === "true";
+      const minimized = localStorage.getItem("emailMinimized") === "true";
+
+      if (closed) {
+        emailIframe.src = "phases/email.html";
+        emailWindow.style.display = "block";
+        localStorage.setItem("emailClosed", "false");
+        localStorage.setItem("emailMinimized", "false");
+      } else if (minimized) {
+        emailWindow.style.display = "block";
+        localStorage.setItem("emailMinimized", "false");
+      } else {
+        emailWindow.style.display = "block";
+      }
+    });
+
+    function closeEmail() {
+      emailWindow.style.display = "none";
+      emailIframe.src = "about:blank";
+      localStorage.setItem("emailClosed", "true");
+      localStorage.setItem("emailMinimized", "false");
+    }
+    function minEmail() {
+      emailWindow.style.display = "none";
+      localStorage.setItem("emailClosed", "false");
+      localStorage.setItem("emailMinimized", "true");
+    }
+
+    // === MESSAGE HANDLER ===
+    window.addEventListener("message", (event) => {
+      if (!event.data) return;
+      const action = typeof event.data === "string" ? event.data : event.data.action;
+
+      switch (action) {
+        case "closeTerminal": closeTerminal(); break;
+        case "minTerminal": minTerminal(); break;
+        case "closeChrome": closeChrome(); break;
+        case "minChrome": minChrome(); break;
+        case "closeEmail": closeEmail(); break;
+        case "minEmail": minEmail(); break;
+        case "showChatNotification":
+          chatboxNotification.style.display = "flex"; // 🔹 show badge
+          break;
+        case "clearChatNotification":
+          chatboxNotification.style.display = "none"; // 🔹 hide badge
+          break;
+      }
+    });
+  </script>
+</body>
+</html>

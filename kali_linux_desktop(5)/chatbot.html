@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cipher AI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Courier New", monospace;
+      background: transparent;
+      color: #ddd;
+      height: 100vh;
+    }
+
+    /* Chat wrapper positions the button + badge */
+    #chat-wrapper {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: inline-block;
+    }
+
+    /* Floating button */
+    #chat-toggle {
+      background: #111;
+      color: #e63946;
+      border: 2px solid #e63946;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 22px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: 0.3s;
+      position: relative;
+    }
+    #chat-toggle:hover {
+      background: #e63946;
+      color: #fff;
+    }
+
+    /* Notification badge */
+    #chat-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: red;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex; /* visible at start */
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Chatbox window */
+    #chat-container {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      width: 500px;
+      height: 500px;
+      background: #111;
+      border: 2px solid #e63946;
+      border-radius: 10px;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 1500;
+      box-shadow: 0px 4px 25px rgba(230,57,70,0.5);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
+    }
+
+    .chat-header {
+      background: #111;
+      color: #fff;
+      padding: 14px;
+      font-weight: bold;
+      text-align: center;
+      border-bottom: 2px solid #e63946;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 18px;
+      position: relative;
+    }
+
+    .cipher-title {
+      color: #e63946;
+      font-size: 20px;
+      font-weight: bold;
+      animation: glowPulse 2.5s infinite ease-in-out;
+    }
+
+    /* Minimize */
+    #chat-minimize {
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      background: #e63946;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 2px 8px;
+    }
+    #chat-minimize:hover {
+      background: #ff4d5b;
+    }
+
+    @keyframes glowPulse {
+      0% { text-shadow: 0 0 6px #e63946, 0 0 12px #e63946; }
+      50% { text-shadow: 0 0 16px #e63946, 0 0 30px #ff4d5b; }
+      100% { text-shadow: 0 0 6px #e63946, 0 0 12px #e63946; }
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      background: #0d0d0d;
+      position: relative;
+    }
+
+    .ascii-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: monospace;
+      font-size: clamp(8px, 1.2vw, 14px);
+      line-height: 1.1;
+      color: rgba(230,57,70,0.45);
+      text-shadow: 0 0 8px rgba(230,57,70,0.6), 0 0 18px rgba(230,57,70,0.9);
+      pointer-events: none;
+      z-index: 0;
+      animation: skullPulse 3s infinite ease-in-out;
+      white-space: pre;
+    }
+
+    @keyframes skullPulse {
+      0%   { opacity: 0.6; }
+      50%  { opacity: 1;   }
+      100% { opacity: 0.6; }
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 8px 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.4;
+      z-index: 1;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: #2d3e50;
+      color: #eee;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background: #1a1a1a;
+      color: #cce7ff;
+      border: 1px solid #333;
+      border-left: 3px solid #e63946;
+      padding: 10px;
+    }
+
+    .quick-replies {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .quick-replies button {
+      padding: 6px 12px;
+      background: #222;
+      border: 1px solid #e63946;
+      border-radius: 5px;
+      color: #e63946;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .quick-replies button:hover {
+      background: #e63946;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Wrapper for button + badge -->
+  <div id="chat-wrapper">
+    <button id="chat-toggle">💻</button>
+    <div id="chat-badge">1</div>
+  </div>
+
+  <div id="chat-container">
+    <div class="chat-header">
+      <span class="cipher-title">CIPHER</span>
+      <button id="chat-minimize">_</button>
+    </div>
+    <div class="chat-box" id="chat">
+      <pre class="ascii-bg">
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡠⢤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠟⠃⠀⠀⠙⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠋⠀⠀⠀⠀⠀⠀⠘⣆⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠾⢛⠒⠀⠀⠀⠀⠀⠀⠀⢸⡆⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣶⣄⡈⠓⢄⠠⡀⠀⠀⠀⣄⣷⠀⠀⠀⠀⠀⠀⠀
+      </pre>
+    </div>
+  </div>
+
+  <script>
+    const chatToggle = document.getElementById("chat-toggle");
+    const chatContainer = document.getElementById("chat-container");
+    const chat = document.getElementById("chat");
+    const chatMinimize = document.getElementById("chat-minimize");
+    const chatBadge = document.getElementById("chat-badge");
+
+    let firstOpen = true;
+    let reconComplete = false;
+    let currentHelpStep = 0;
+
+    const helpHints = [
+      "Consult the recon_notes.txt file — it contains the hospital’s domain name you’ll need to start.",
+      "Use whois and nslookup on the domain to uncover registration details, IP addresses, and DNS records.",
+      "Search through LinkedIn profiles connected to the hospital — valuable staff details are hidden there.",
+      "Review Alex’s personal Facebook page and the hospital’s Facebook page for additional intel.",
+      "Check the hospital’s official blog — small details can reveal big vulnerabilities."
+    ];
+
+    // Show badge on page load
+    window.onload = () => {
+      chatBadge.style.display = "flex";
+    };
+
+    // Receive from desktop
+    window.addEventListener("message", (event) => {
+      if (event.data && event.data.action === "cipherNextMessage") {
+        reconComplete = true;
+        chatBadge.style.display = "flex";
+      }
+    });
+
+    chatToggle.addEventListener("click", () => {
+      chatContainer.style.display = "flex";
+      chatBadge.style.display = "none"; // hide badge once opened
+      parent.postMessage({ action: "clearChatNotification" }, "*");
+
+      if (firstOpen) {
+        firstOpen = false;
+        addBotMessage("Welcome, Operative. I am CIPHER, your handler for this mission. I will guide you throughout this operation, providing intel, tasks, and support when needed. If you get stuck, refer back to me. You are about to step into the world of hacking — stay sharp, stay hidden, and follow instructions carefully.");
+        setTimeout(() => { playPhaseBriefing(); }, 3000);
+      }
+
+      if (reconComplete) {
+        addBotMessage("Great job on completing the recon phase. Now it's time we get tactical and craft our phishing email for an employee.");
+        reconComplete = false;
+      }
+    });
+
+    chatMinimize.addEventListener("click", () => {
+      chatContainer.style.display = "none";
+    });
+
+    function playPhaseBriefing() {
+      const briefing = [
+        "Phase 1 initialized: Reconnaissance.",
+        "Your objectives:",
+        "- Perform open-source intelligence: search on Google for potential usernames and staff.",
+        "- Run Nmap scans against the target system.",
+        "- Conduct DNS lookups to gather domain intelligence.",
+        "Additionally, we have sent you a REPORT to your email. Fill it out correctly to move forward to Phase 2."
+      ];
+      let i = 0;
+      function nextLine() {
+        if (i < briefing.length) {
+          addBotMessage(briefing[i]);
+          i++;
+          setTimeout(nextLine, 1500);
+        } else {
+          showQuickReplies();
+        }
+      }
+      nextLine();
+    }
+
+    function showQuickReplies() {
+      const replyContainer = document.createElement("div");
+      replyContainer.classList.add("quick-replies");
+
+      const understandBtn = document.createElement("button");
+      understandBtn.innerText = "I understand";
+      understandBtn.onclick = () => handleQuickReply("I understand");
+
+      const helpBtn = document.createElement("button");
+      helpBtn.innerText = "I need help";
+      helpBtn.onclick = () => handleQuickReply("I need help");
+
+      replyContainer.appendChild(understandBtn);
+      replyContainer.appendChild(helpBtn);
+
+      chat.appendChild(replyContainer);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function unlockNextHelp() {
+      if (currentHelpStep < helpHints.length) {
+        const replyContainer = document.createElement("div");
+        replyContainer.classList.add("quick-replies");
+
+        const btn = document.createElement("button");
+        btn.innerText = "Help " + (currentHelpStep + 1);
+        btn.onclick = () => handleQuickReply("Help " + (currentHelpStep + 1));
+
+        replyContainer.appendChild(btn);
+        chat.appendChild(replyContainer);
+        chat.scrollTop = chat.scrollHeight;
+      }
+    }
+
+    function handleQuickReply(choice) {
+      addMessage(choice, "user");
+
+      if (choice.toLowerCase() === "i understand" || choice.toLowerCase() === "ok i understand") {
+        addBotMessage("Acknowledged. Proceed with your reconnaissance. Stay covert.");
+        currentHelpStep = 0;
+        unlockNextHelp();
+      } else if (choice === "I need help") {
+        addBotMessage("Assistance provided: Use Google searches, Nmap scans, and DNS lookups. Don’t forget the report in your email.");
+      } else if (choice.startsWith("Help")) {
+        const helpIndex = parseInt(choice.split(" ")[1]) - 1;
+        if (helpIndex === currentHelpStep) {
+          addBotMessage(helpHints[helpIndex]);
+          currentHelpStep++;
+          unlockNextHelp();
+        }
+      }
+    }
+
+    function addMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.classList.add("message", sender);
+      msg.innerText = text;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function addBotMessage(text) {
+      const msg = document.createElement("div");
+      msg.classList.add("message", "bot");
+      msg.innerText = text;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reconnaissance Worksheet</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Courier New", monospace;
+      background: #0a0a0a;
+      color: #00ff99;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 50px auto;
+      padding: 25px;
+      background: #111;
+      border: 1px solid #00ff99;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 255, 153, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00ff99;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .instructions {
+      background: #000;
+      padding: 15px;
+      border-left: 4px solid #00ff99;
+      margin-bottom: 25px;
+      font-style: italic;
+    }
+
+    .question {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #00ff99;
+      border-radius: 6px;
+      background: #0f0f0f;
+      filter: blur(4px);
+      pointer-events: none;
+    }
+
+    .question.active {
+      filter: none;
+      pointer-events: auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #00ffcc;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background: #000;
+      color: #00ff99;
+      font-size: 14px;
+    }
+
+    input.incorrect {
+      border: 1px solid red;
+      background: #330000;
+      color: #ff6666;
+    }
+
+    .feedback {
+      margin-top: 8px;
+      font-size: 13px;
+      color: red;
+      display: none;
+    }
+
+    .feedback.correct {
+      color: #00ff99;
+      display: block;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 15px;
+      background: #00ff99;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #00cc77;
+    }
+
+    .message {
+      margin-top: 20px;
+      padding: 15px;
+      background: #000;
+      border-left: 4px solid #00ff99;
+      display: none;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Reconnaissance Worksheet</h1>
+    <p class="instructions">
+      Cipher: One answer at a time. Slip up, and I’ll let you know just how badly.
+    </p>
+
+    <form id="reconForm">
+
+      <!-- WHOIS -->
+      <div class="question active" data-answer="2012-04-14">
+        <label>1. What is the creation date of starlight-hospital.com?</label>
+        <input type="text" name="q1">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <div class="question" data-answer="securedomains llc">
+        <label>2. What is the registrar of starlight-hospital.com?</label>
+        <input type="text" name="q2">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <!-- NSLOOKUP -->
+      <div class="question" data-answer="192.168.1.1">
+        <label>3. What is Starlight Hospital server IP address?</label>
+        <input type="text" name="q3">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <div class="question" data-answer="104.22.14.251,104.22.15.251">
+        <label>4. What is one of Starlight Hospital’s non-authoritative IP addresses?</label>
+        <input type="text" name="q4">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <!-- LinkedIn -->
+      <div class="question" data-answer="12">
+        <label>5. How many new nurses were welcomed to Starlight Hospital?</label>
+        <input type="text" name="q5">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <div class="question" data-answer="100">
+        <label>6. What was Starlight’s compliance percentage?</label>
+        <input type="text" name="q6">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <div class="question" data-answer="vmware cluster">
+        <label>7. What was the name of the app Starlight Hospital migrated to?</label>
+        <input type="text" name="q7">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <div class="question" data-answer="healthcare cybersecurity summit 2025">
+        <label>8. What was the recent event Alex attended?</label>
+        <input type="text" name="q8">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <!-- Facebook -->
+      <div class="question" data-answer="cat">
+        <label>9. What is Alex’s favorite pet?</label>
+        <input type="text" name="q9">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <div class="question" data-answer="luna">
+        <label>10. What is his cat’s name?</label>
+        <input type="text" name="q10">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <div class="question" data-answer="hollister,home depot,polo">
+        <label>11. List one place he loves to shop at.</label>
+        <input type="text" name="q11">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <div class="question" data-answer="9/15/1984">
+        <label>12. What is his date of birth?</label>
+        <input type="text" name="q12">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <div class="question" data-answer="france">
+        <label>13. Where did Alex go for his last vacation?</label>
+        <input type="text" name="q13">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <div class="question" data-answer="petsmart">
+        <label>14. Where do they buy pet food from?</label>
+        <input type="text" name="q14">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <div class="question" data-answer="dr. rebecca lee">
+        <label>15. Which doctor was featured in NYC’s Top Doctors 2025 from Starlight Health?</label>
+        <input type="text" name="q15">
+        <div class="feedback"></div>
+        <button type="button" onclick="checkAnswer(this)">Submit</button>
+      </div>
+
+      <!-- Blog -->
+      <div class="question" data-answer="alex.carter@gmail.com">
+        <label>16. What is Alex’s personal email?</label>
+        <input type="text" name="q16">
+        <div class="feedback"></div>
+        <button type="button" onclick="finishWorksheet()">Submit</button>
+      </div>
+    </form>
+
+    <div class="message" id="confirmation">
+      ✅ Cipher: Congrats on completing Phase 1. Let’s move forward…
+      <br><br>
+      <button id="continue-btn" style="display:none;">Continue</button>
+    </div>
+  </div>
+
+  <script>
+    const taunts = [
+      "❌ Try harder, you missed something.",
+      "❌ Wrong lead, check your intel again.",
+      "❌ Pathetic effort. Even interns do better.",
+      "❌ Nope. Rewind your steps.",
+      "❌ Not even close. Focus."
+    ];
+
+    function normalize(str) {
+      return str.trim().toLowerCase();
+    }
+
+    function getRandomTaunt() {
+      return taunts[Math.floor(Math.random() * taunts.length)];
+    }
+
+    function checkAnswer(button) {
+      const current = button.parentElement;
+      const input = current.querySelector("input");
+      const feedback = current.querySelector(".feedback");
+      const correctAnswers = current.getAttribute("data-answer").split(",");
+
+      if (correctAnswers.includes(normalize(input.value))) {
+        input.classList.remove("incorrect");
+        feedback.textContent = "✔ Correct. Proceed.";
+        feedback.classList.add("correct");
+        feedback.style.display = "block";
+
+        setTimeout(() => {
+          current.classList.remove("active");
+          current.querySelector("input").setAttribute("disabled", true);
+          button.style.display = "none";
+
+          const next = current.nextElementSibling;
+          if (next) next.classList.add("active");
+        }, 1000);
+
+      } else {
+        input.classList.add("incorrect");
+        feedback.textContent = getRandomTaunt();
+        feedback.classList.remove("correct");
+        feedback.style.display = "block";
+      }
+    }
+
+    function finishWorksheet() {
+      const current = event.target.parentElement;
+      const input = current.querySelector("input");
+      const feedback = current.querySelector(".feedback");
+      const correctAnswers = current.getAttribute("data-answer").split(",");
+
+      if (correctAnswers.includes(normalize(input.value))) {
+        input.classList.remove("incorrect");
+        feedback.textContent = "✔ Correct. Well done.";
+        feedback.classList.add("correct");
+        feedback.style.display = "block";
+
+        current.classList.remove("active");
+        document.getElementById("confirmation").style.display = "block";
+        document.getElementById("continue-btn").style.display = "inline-block";
+
+        document.getElementById("continue-btn").addEventListener("click", () => {
+          window.location.href = "../../../phase2_intro.html";
+        });
+
+      } else {
+        input.classList.add("incorrect");
+        feedback.textContent = getRandomTaunt();
+        feedback.classList.remove("correct");
+        feedback.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>

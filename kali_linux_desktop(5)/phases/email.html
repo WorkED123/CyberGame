@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gmail Replica</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #eee;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Exit button (Linux style red circle) */
+    #exit-btn {
+      position: fixed;
+      top: 8px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ff5f56;
+      color: #fff;
+      border: none;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 18px;
+      text-align: center;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    #exit-btn:hover { background: #ff8783; }
+
+    /* Sidebar */
+    #sidebar {
+      width: 220px;
+      background: #111;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #333;
+    }
+    #compose {
+      background: #222;
+      border: none;
+      padding: 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #0ff;
+    }
+    .nav-item { padding: 8px; border-radius: 16px; cursor: pointer; color: #eee; }
+    .nav-item:hover { background: #222; }
+
+    /* Main */
+    #main { flex: 1; display: flex; flex-direction: column; }
+
+    /* Top bar */
+    #topbar {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid #333;
+      background: #111;
+      color: #eee;
+    }
+    #search {
+      flex: 1;
+      max-width: 600px;
+      margin: 0 20px;
+      padding: 8px;
+      border-radius: 24px;
+      border: 1px solid #333;
+      background: #000;
+      color: #eee;
+    }
+
+    /* Tabs */
+    #tabs { display: flex; border-bottom: 1px solid #333; background: #111; color: #eee; }
+    .tab { flex: 1; text-align: center; padding: 12px; cursor: pointer; }
+    .tab.active { border-bottom: 3px solid #0ff; font-weight: bold; color: #0ff; }
+
+    /* Inbox */
+    #inbox { flex: 1; overflow-y: auto; }
+    .email {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid #222;
+      cursor: pointer;
+      color: #eee;
+    }
+    .email:hover { background: #111; }
+    .sender { font-weight: bold; width: 150px; }
+    .subject { flex: 1; margin: 0 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .date { color: #aaa; }
+
+    /* Viewer */
+    #viewer {
+      position: absolute;
+      top: 56px;
+      left: 220px;
+      right: 0;
+      bottom: 0;
+      background: #000;
+      color: #eee;
+      display: none;
+      flex-direction: column;
+      border-left: 1px solid #333;
+    }
+    #viewer-header {
+      padding: 16px;
+      border-bottom: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111;
+    }
+    #viewer-body { padding: 16px; overflow-y: auto; }
+
+    /* Compose */
+    #composeModal {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 400px;
+      background: #111;
+      border: 1px solid #333;
+      color: #eee;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      display: none;
+      flex-direction: column;
+      z-index: 100;
+    }
+    #composeModal header { padding: 8px; background: #222; font-weight: bold; }
+    #composeModal input, #composeModal textarea {
+      border: none;
+      border-bottom: 1px solid #333;
+      padding: 8px;
+      font-family: inherit;
+      width: 100%;
+      background: #000;
+      color: #eee;
+    }
+    #composeModal textarea { height: 120px; resize: none; }
+    #composeModal button {
+      margin: 8px;
+      padding: 8px 12px;
+      background: #0ff;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      align-self: flex-end;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <!-- Exit button -->
+  <button id="exit-btn" onclick="parent.postMessage('closeEmail','*')">×</button>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <button id="compose">+ Compose</button>
+    <div class="nav-item">Inbox</div>
+    <div class="nav-item">Starred</div>
+    <div class="nav-item">Sent</div>
+    <div class="nav-item">Drafts</div>
+    <div class="nav-item">Spam</div>
+    <div class="nav-item">Trash</div>
+  </div>
+
+  <!-- Main -->
+  <div id="main">
+    <div id="topbar">
+      <div>📧 Gmail</div>
+      <input id="search" placeholder="Search mail">
+      <div>⚙️ 🙂</div>
+    </div>
+
+    <div id="tabs">
+      <div class="tab active">Primary</div>
+      <div class="tab">Social</div>
+      <div class="tab">Promotions</div>
+    </div>
+
+    <div id="inbox"></div>
+  </div>
+
+  <!-- Viewer -->
+  <div id="viewer">
+    <div id="viewer-header">
+      <span id="viewer-subject"></span>
+      <button onclick="closeViewer()">Close</button>
+    </div>
+    <div id="viewer-body"></div>
+  </div>
+
+  <!-- Compose -->
+  <div id="composeModal">
+    <header>New Message</header>
+    <input type="text" placeholder="To">
+    <input type="text" placeholder="Subject">
+    <textarea placeholder="Message"></textarea>
+    <button onclick="closeCompose()">Send</button>
+  </div>
+
+  <script>
+    const inbox = document.getElementById("inbox");
+    const viewer = document.getElementById("viewer");
+    const viewerSubject = document.getElementById("viewer-subject");
+    const viewerBody = document.getElementById("viewer-body");
+    const composeModal = document.getElementById("composeModal");
+
+    // Emails list with Cipher email on top
+    const emails = [
+      {
+        sender:"Cipher",
+        subject:"Recon Sheet",
+        body:`Copy and paste this URL into Chrome:<br>
+              <span style="color:#0ff;">http://intranet.starlight-hospital.com/recon</span>`,
+        date:"Today"
+      },
+      {sender:"AT&T",subject:"Your monthly bill is ready",body:"Total due: $89.23. Pay by April 25 to avoid late fees.",date:"Apr 20"},
+      {sender:"Amazon",subject:"Your package has shipped",body:"Your Amazon order #123-456789 has shipped. Expected delivery tomorrow.",date:"Apr 19"},
+      {sender:"PayPal",subject:"Payment received",body:"You received $50 from John Doe.",date:"Apr 18"},
+      {sender:"Netflix",subject:"Your subscription has been renewed",body:"Your monthly Netflix subscription was renewed successfully.",date:"Apr 18"},
+      {sender:"Spotify",subject:"Payment confirmation",body:"Your Premium plan payment of $9.99 has been processed.",date:"Apr 17"},
+      {sender:"LinkedIn",subject:"3 new connection requests",body:"You have new invites waiting. Connect with your network today.",date:"Apr 16"},
+      {sender:"Google",subject:"Password Reset Request",body:"We received a request to reset your Google account password.",date:"Apr 15"},
+      {sender:"GitHub",subject:"New sign-in from Chrome on Windows",body:"A new sign-in to your GitHub account was detected.",date:"Apr 14"},
+      {sender:"Apple",subject:"Your Apple ID was used to sign in",body:"If this wasn’t you, please reset your password immediately.",date:"Apr 13"},
+      {sender:"Bank of America",subject:"Your statement is ready",body:"Your April statement is now available online.",date:"Apr 12"},
+      {sender:"Facebook",subject:"New login alert",body:"Your account was accessed from a new device.",date:"Apr 11"},
+      {sender:"Instagram",subject:"Reset your password",body:"Click the link below to reset your Instagram password.",date:"Apr 11"},
+      {sender:"Twitter",subject:"New login from Safari on iPhone",body:"We noticed a new login to your account.",date:"Apr 10"},
+      {sender:"Uber",subject:"Your receipt from last ride",body:"Trip total: $18.22. Thanks for riding with Uber!",date:"Apr 10"},
+      {sender:"Lyft",subject:"Thanks for riding",body:"Your Lyft receipt: $15.60. Have a great day!",date:"Apr 9"}
+    ];
+
+    // Populate inbox
+    emails.forEach((email) => {
+      const div = document.createElement("div");
+      div.className = "email";
+      div.innerHTML = `<div class="sender">${email.sender}</div>
+                       <div class="subject">${email.subject} - ${email.body}</div>
+                       <div class="date">${email.date}</div>`;
+      div.onclick = () => openEmail(email);
+      inbox.appendChild(div);
+    });
+
+    function openEmail(email) {
+      viewer.style.display = "flex";
+      viewerSubject.textContent = email.subject;
+      viewerBody.innerHTML = `<p><b>From:</b> ${email.sender}</p>
+                              <p>${email.body}</p>`;
+    }
+    function closeViewer() { viewer.style.display = "none"; }
+
+    // Compose
+    document.getElementById("compose").onclick = () => composeModal.style.display = "flex";
+    function closeCompose() { composeModal.style.display = "none"; }
+  </script>
+</body>
+</html>

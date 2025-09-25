@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fake Chrome with Tabs</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #202124; color: #e8eaed; }
+    .topbar { display: flex; align-items: center; background: #333; padding: 6px; color: white; }
+    .tab { background: #555; padding: 6px 12px; margin-right: 4px; border-radius: 5px 5px 0 0; cursor: pointer; display: inline-flex; align-items: center; }
+    .tab.active { background: #202124; }
+    .tab button { margin-left: 8px; background: none; border: none; color: white; cursor: pointer; }
+    .controls { margin-left: auto; display: flex; gap: 6px; position: relative; }
+    .controls button { border: none; width: 18px; height: 18px; border-radius: 50%; cursor: pointer; }
+    .controls .close { background: red; }
+    .controls .minimize { background: gold; }
+    .controls button:hover { opacity: 0.7; }
+    .controls button::after { 
+      content: attr(title); 
+      position: absolute; 
+      font-size: 10px; 
+      color: white; 
+      background: rgba(0,0,0,0.6); 
+      padding: 2px 4px; 
+      border-radius: 4px; 
+      display: none;
+      transform: translate(-50%, -150%);
+      white-space: nowrap;
+    }
+    .controls button:hover::after { display: block; }
+
+    .urlbar { width: calc(100% - 20px); margin: 5px 10px; padding: 6px; border: none; border-radius: 4px; background: #3c4043; color: white; }
+    .iframe-container { width: 100%; height: calc(100vh - 90px); position: relative; }
+    .iframe-container iframe { width: 100%; height: 100%; border: none; background: #202124; position: absolute; top: 0; left: 0; display: none; }
+    .iframe-container iframe.active { display: block; }
+
+    /* Fake Google homepage styles */
+    #google-home {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: calc(100vh - 90px);
+      text-align: center;
+    }
+    #google-logo {
+      margin-bottom: 20px;
+      width: 272px;
+      height: auto;
+    }
+    #google-search {
+      width: 500px;
+      padding: 12px 20px;
+      border: 1px solid #5f6368;
+      border-radius: 24px;
+      font-size: 16px;
+      outline: none;
+      background: #202124;
+      color: #e8eaed;
+    }
+    #google-search:focus { border-color: #4285F4; box-shadow: 0 0 5px #4285F4; }
+    .google-buttons { margin-top: 20px; }
+    .google-buttons button {
+      background: #303134; border: 1px solid #5f6368; border-radius: 4px;
+      color: #e8eaed; padding: 8px 16px; margin: 0 4px; cursor: pointer; font-size: 14px;
+    }
+    .google-buttons button:hover { border-color: #e8eaed; }
+    #suggestion { margin-top: 15px; font-size: 16px; color: #f28b82; }
+    .google-footer { margin-top: 30px; font-size: 12px; color: #9aa0a6; }
+    .google-footer a { color: #8ab4f8; margin: 0 4px; text-decoration: none; }
+
+    /* Fake Results Page */
+    #results { display: none; padding: 30px; color: #e8eaed; }
+    .result { margin-bottom: 25px; }
+    .result a { color: #8ab4f8; font-size: 18px; text-decoration: none; cursor: pointer; }
+    .result a:hover { text-decoration: underline; }
+    .result-url { font-size: 14px; color: #9aa0a6; }
+    .result p { font-size: 14px; margin: 5px 0 0; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div id="tabs"></div>
+    <button onclick="newTab()">+</button>
+    <div class="controls">
+      <button class="minimize" title="Minimize" onclick="parent.postMessage({action:'minChrome'}, '*')"></button>
+      <button class="close" title="Close" onclick="parent.postMessage({action:'closeChrome'}, '*')"></button>
+    </div>
+  </div>
+  <input id="urlbar" class="urlbar" placeholder="Search or type URL..." onkeydown="if(event.key==='Enter'){handleURL(this.value)}">
+
+  <!-- Google homepage -->
+  <div id="google-home">
+    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_160x56dp.png" alt="Google" id="google-logo">
+    <input type="text" id="google-search" placeholder="Search Google or type a URL">
+    <div class="google-buttons">
+      <button id="search-btn">Google Search</button>
+      <button id="lucky-btn">I'm Feeling Lucky</button>
+    </div>
+    <div id="suggestion"></div>
+    <div class="google-footer">
+      Google offered in: <a href="#">Deutsch</a><a href="#">English</a><a href="#">Français</a><a href="#">Español</a>
+    </div>
+  </div>
+
+  <div id="results"></div>
+  <div class="iframe-container" id="iframeContainer"></div>
+
+  <script>
+    let currentTab = null;
+    let tabCount = 0;
+    let resultsTabId = null;
+
+    window.onload = () => {
+      const saved = JSON.parse(localStorage.getItem("chromeSession"));
+      if (saved && saved.tabs.length > 0) {
+        saved.tabs.forEach(tab => { newTab(tab.url, tab.title, tab.id); });
+        switchTab(saved.activeTab);
+        document.getElementById("google-home").style.display = "none";
+      } else {
+        // FIX #1: show Google homepage on first launch
+        document.getElementById("google-home").style.display = "flex";
+        document.getElementById("results").style.display = "none";
+      }
+    };
+
+    function saveSession() {
+      const tabs = [];
+      document.querySelectorAll(".iframe-container iframe").forEach(iframe => {
+        const title = document.getElementById("tabBtn" + iframe.id).querySelector("span").textContent;
+        tabs.push({ id: iframe.id, url: iframe.src, title });
+      });
+      localStorage.setItem("chromeSession", JSON.stringify({ tabs, activeTab: currentTab }));
+    }
+
+    // FIX #2: make new tabs show Google homepage
+    function newTab(url = null, title = "Google", forcedId = null) {
+      tabCount++;
+      const id = forcedId || "tab" + tabCount;
+
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      const tabBtn = document.createElement("div");
+      tabBtn.className = "tab active";
+      tabBtn.id = "tabBtn" + id;
+      tabBtn.innerHTML = `<span>${title}</span> <button onclick="closeTab('${id}')">x</button>`;
+      tabBtn.onclick = () => switchTab(id);
+      document.getElementById("tabs").appendChild(tabBtn);
+
+      document.querySelectorAll(".iframe-container iframe").forEach(i => i.classList.remove("active"));
+      const iframe = document.createElement("iframe");
+      iframe.id = id;
+      iframe.src = url || "about:blank"; // keep structure
+      iframe.classList.add("active");
+      document.getElementById("iframeContainer").appendChild(iframe);
+
+      currentTab = id;
+      saveSession();
+
+      // Always show Google homepage when opening a blank tab
+      if (!url || url === "about:blank") {
+        document.getElementById("google-home").style.display = "flex";
+        document.getElementById("results").style.display = "none";
+      } else {
+        document.getElementById("google-home").style.display = "none";
+        document.getElementById("results").style.display = "none";
+      }
+    }
+
+    function switchTab(id) {
+      currentTab = id;
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.getElementById("tabBtn" + id).classList.add("active");
+      document.querySelectorAll(".iframe-container iframe").forEach(i => i.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+
+      if (id === resultsTabId) document.getElementById("results").style.display = "block";
+      else document.getElementById("results").style.display = "none";
+
+      saveSession();
+    }
+
+    function closeTab(id) {
+      const tabBtn = document.getElementById("tabBtn" + id);
+      if (tabBtn) tabBtn.remove();
+      const iframe = document.getElementById(id);
+      if (iframe) iframe.remove();
+      if (id === currentTab) {
+        const tabs = document.querySelectorAll(".tab");
+        if (tabs.length > 0) {
+          const lastTabId = tabs[tabs.length - 1].id.replace("tabBtn", "");
+          switchTab(lastTabId);
+        } else {
+          currentTab = null;
+          document.getElementById("google-home").style.display = "flex";
+          document.getElementById("results").style.display = "none";
+        }
+      }
+      saveSession();
+    }
+
+    // === Make search results open in new fake tabs ===
+    function setupResultLinks() {
+      document.querySelectorAll("#results a").forEach(link => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const url = link.getAttribute("href");
+          const title = link.textContent.trim();
+          newTab(url, title);
+          switchTab("tab" + tabCount); // immediately switch to the new tab
+        });
+      });
+    }
+
+    // === Search handling ===
+    function handleSearch(query) {
+      query = query.toLowerCase().trim();
+      const googleHome = document.getElementById("google-home");
+      const resultsDiv = document.getElementById("results");
+      const suggestion = document.getElementById("suggestion");
+      suggestion.textContent = "";
+
+      if (query === "http://intranet.starlight-hospital.com/recon") {
+        googleHome.style.display = "none"; resultsDiv.style.display = "none";
+        newTab("webpages/recon.html", "Recon Page"); return;
+      }
+
+      if (query.includes("hospital") || query.includes("starlight")) {
+        googleHome.style.display = "none"; resultsDiv.style.display = "block";
+        resultsTabId = currentTab;
+
+        resultsDiv.innerHTML = `
+          <div class="result"><a href="webpages/starlight_hospital.html">Starlight Hospital - Official Site</a>
+            <div class="result-url">webpages/starlight_hospital.html</div>
+            <p>Starlight Hospital – trusted healthcare for our community since 2012, providing compassionate care and modern medical services.</p>
+          </div>
+
+          <div class="result"><a href="webpages/facebook_alex_carter.html">Facebook - Alex Carter</a>
+            <div class="result-url">webpages/facebook_alex_carter.html</div>
+            <p>Alex Carter – sharing life moments, updates, and connections with friends and family on Facebook.</p>
+          </div>
+
+          <div class="result"><a href="webpages/facebook_starlight_hospital.html">Facebook - Starlight Hospital</a>
+            <div class="result-url">webpages/facebook_starlight_hospital.html</div>
+            <p>Discover Starlight Hospital on Facebook – serving our community with care and commitment since 2012.</p>
+          </div>
+
+          <div class="result"><a href="webpages/directory.html">Hospital Directory</a>
+            <div class="result-url">webpages/directory.html</div>
+            <p>Find the closest hospital nearby you.</p>
+          </div>
+
+          <div class="result"><a href="webpages/news.html">Top 10 Stories</a>
+            <div class="result-url">webpages/news.html</div>
+            <p>Learn about the top 10 events that recently happened.</p>
+          </div>
+
+          <div class="result"><a href="webpages/hospital_blog.html">Hospital Blog</a>
+            <div class="result-url">webpages/hospital_blog.html</div>
+            <p>Welcome to our hospital blog, sharing health tips, news, and stories to keep our community informed and supported.</p>
+          </div>
+
+          <div class="result"><a href="webpages/linkedin_alex_carter.html">LinkedIn - Alex Carter</a>
+            <div class="result-url">webpages/linkedin_alex_carter.html</div>
+            <p>Professional profile of Alex Carter with career history.</p>
+          </div>
+
+          <div class="result"><a href="webpages/linkedin_michael_thomas.html">LinkedIn - Michael Thomas</a>
+            <div class="result-url">webpages/linkedin_michael_thomas.html</div>
+            <p>LinkedIn profile of Michael Thomas, IT staff at Starlight.</p>
+          </div>
+
+          <div class="result"><a href="webpages/linkedin_rebecca_lee.html">LinkedIn - Rebecca Lee</a>
+            <div class="result-url">webpages/linkedin_rebecca_lee.html</div>
+            <p>Rebecca Lee’s LinkedIn profile with professional background.</p>
+          </div>
+
+          <div class="result"><a href="webpages/linkedin_sarah_nguyen.html">LinkedIn - Sarah Nguyen</a>
+            <div class="result-url">webpages/linkedin_sarah_nguyen.html</div>
+            <p>Sarah Nguyen’s LinkedIn profile showing work at Starlight.</p>
+          </div>
+        `;
+
+        setupResultLinks(); // make links open in new tabs + switch to them
+      } else {
+        googleHome.style.display = "flex"; resultsDiv.style.display = "none";
+        suggestion.innerHTML = `No results found. Did you mean <strong>Starlight Hospital</strong>?`;
+      }
+    }
+
+    function handleURL(url) {
+      if (url === "http://intranet.starlight-hospital.com/recon") {
+        newTab("webpages/recon.html", "Recon Page"); return;
+      }
+      handleSearch(url);
+    }
+
+    document.getElementById("google-search").addEventListener("keydown", (e) => { if (e.key === "Enter") handleSearch(e.target.value); });
+    document.getElementById("search-btn").addEventListener("click", () => { handleSearch(document.getElementById("google-search").value); });
+    document.getElementById("lucky-btn").addEventListener("click", () => { handleSearch("starlight hospital"); });
+
+    window.addEventListener("message", (event) => {
+      if (event.data === "closeChrome") localStorage.removeItem("chromeSession");
+    });
+  </script>
+</body>
+</html>
